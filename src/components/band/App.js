@@ -21,6 +21,9 @@ export default function App() {
       strapImage="/assets/bandd.png"
       strapColor="#111111"
       finish="glossy"
+      anchor="right"
+      size={0.55}
+      strapLength={0.6}
       interactive
       intro
       style={{
@@ -29,6 +32,7 @@ export default function App() {
         width: '100%',
         height: '100%',
         pointerEvents: 'auto',
+        overflow: 'visible',
       }}
     />
   );
