@@ -26,6 +26,7 @@ const TEXTURE_PATH = '/assets/bandd.png';
 
 useGLTF.preload(GLTF_PATH);
 useTexture.preload(TEXTURE_PATH);
+useTexture.preload('/assets/PP.png');
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(false);
@@ -135,6 +136,7 @@ function Band({ isMobile, maxSpeed = 50, minSpeed = 10 }) {
 
   const { nodes, materials } = useGLTF(GLTF_PATH);
   const texture = useTexture(TEXTURE_PATH);
+  const cardTexture = useTexture('/assets/PP.png');
   const { width, height } = useThree((state) => state.size);
 
   const [curve] = useState(
@@ -260,7 +262,7 @@ function Band({ isMobile, maxSpeed = 50, minSpeed = 10 }) {
             }}
           >
             <mesh geometry={nodes.card.geometry}>
-              <meshPhysicalMaterial {...materials.base} />
+              <meshPhysicalMaterial {...materials.base} map={cardTexture} />
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
