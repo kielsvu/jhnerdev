@@ -1,22 +1,21 @@
 import "./globals.css";
-import RefreshRedirect from '@/components/RefreshRedirect'
+import { MotionConfig } from "framer-motion";
+import RefreshRedirect from '@/components/RefreshRedirect';
 
 export const metadata = {
   title: "Jhner.dev",
   description: "Agustin Jhoner's personal portfolio, focused on web development and modern UI.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <RefreshRedirect />
-        {children}
-        </body>
+        <MotionConfig reducedMotion="user">
+          <RefreshRedirect />
+          {children}
+        </MotionConfig>
+      </body>
     </html>
   );
 }
