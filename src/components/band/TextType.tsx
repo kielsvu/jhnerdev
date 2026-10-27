@@ -33,25 +33,23 @@ export default function TextType({
     const target = texts[index] ?? ""
     const finished = value === target
     const empty = value.length === 0
-    const delay = finished
-      ? pauseDuration
-      : empty && deleting
-        ? 300
-        : deleting
-          ? deletingSpeed
-          : typingSpeed
+
+    // Check deleting FIRST — otherwise finished+deleting loops forever at pauseDuration
+    const delay = deleting
+      ? empty ? 300 : deletingSpeed
+      : finished ? pauseDuration : typingSpeed
 
     const timer = setTimeout(() => {
       const current = textsRef.current
-      if (finished) {
-        setDeleting(true)
-      } else if (deleting) {
+      if (deleting) {
         const next = value.slice(0, -1)
         setValue(next)
         if (next.length === 0) {
           setDeleting(false)
           setIndex((i) => (i + 1) % current.length)
         }
+      } else if (finished) {
+        setDeleting(true)
       } else {
         setValue(target.slice(0, value.length + 1))
       }
