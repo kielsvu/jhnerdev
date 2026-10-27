@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useMemo, type ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 
 type TextTypeProps = {
   text: string | string[]
@@ -21,18 +21,28 @@ export default function TextType({
   cursorCharacter = "_",
   cursorClassName = "",
 }: TextTypeProps) {
-  const texts = useMemo(() => (Array.isArray(text) ? text : [text]), [text])
+  const textsRef = useRef<string[]>([])
+  textsRef.current = Array.isArray(text) ? text : [text]
+
   const [index, setIndex] = useState(0)
   const [value, setValue] = useState("")
   const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
+    const texts = textsRef.current
     const target = texts[index] ?? ""
     const finished = value === target
     const empty = value.length === 0
-    const delay = finished ? pauseDuration : empty && deleting ? 300 : deleting ? deletingSpeed : typingSpeed
+    const delay = finished
+      ? pauseDuration
+      : empty && deleting
+        ? 300
+        : deleting
+          ? deletingSpeed
+          : typingSpeed
 
     const timer = setTimeout(() => {
+      const current = textsRef.current
       if (finished) {
         setDeleting(true)
       } else if (deleting) {
@@ -40,7 +50,7 @@ export default function TextType({
         setValue(next)
         if (next.length === 0) {
           setDeleting(false)
-          setIndex((current) => (current + 1) % texts.length)
+          setIndex((i) => (i + 1) % current.length)
         }
       } else {
         setValue(target.slice(0, value.length + 1))
@@ -48,7 +58,7 @@ export default function TextType({
     }, delay)
 
     return () => clearTimeout(timer)
-  }, [deleting, index, pauseDuration, texts, typingSpeed, deletingSpeed, value])
+  }, [deleting, index, pauseDuration, typingSpeed, deletingSpeed, value])
 
   return (
     <>
