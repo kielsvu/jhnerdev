@@ -15,11 +15,11 @@ import { hasPlayedIntro, setIntroPlayed } from '@/lib/introState'
 
 export default function Home() {
   const [showWelcome, setShowWelcome] = useState(false)
-  const [showApp, setShowApp] = useState(true)
+  const [showApp, setShowApp]         = useState(true)
 
   useEffect(() => {
     const currentHash = window.location.hash
-    const pathname = window.location.pathname
+    const pathname    = window.location.pathname
 
     if (currentHash === '#portfolio') {
       setShowWelcome(false)
@@ -27,22 +27,16 @@ export default function Home() {
       return
     }
 
-    const navEntries = performance.getEntriesByType('navigation')
-    const navigationType =
-      navEntries.length > 0
-        ? (navEntries[0] as PerformanceNavigationTiming).type
-        : null
-
+    const navEntries     = performance.getEntriesByType('navigation')
+    const navigationType = navEntries.length > 0
+      ? (navEntries[0] as PerformanceNavigationTiming).type
+      : null
     const isReload = navigationType === 'reload'
 
     if (isReload && pathname === '/') {
       sessionStorage.removeItem('introPlayed')
       sessionStorage.removeItem('heroPlayed')
-
-      if (window.location.hash) {
-        history.replaceState(null, '', '/')
-      }
-
+      if (window.location.hash) history.replaceState(null, '', '/')
       window.scrollTo({ top: 0, behavior: 'instant' })
     }
 
@@ -88,22 +82,24 @@ export default function Home() {
       <AnimatePresence>
         {showWelcome && (
           <motion.div
-            initial={{ y: 0 }}
-            animate={{ y: 0 }}
-            exit={{ y: '-100%' }}
+            initial={{ y: 0, opacity: 1 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: '-100%', opacity: 0 }}
             onAnimationStart={(definition) => {
-              if (definition === 'exit') {
-                setShowApp(true)
-              }
+              if (definition === 'exit') setShowApp(true)
             }}
             transition={{
-              duration: 1.2,
-              ease: [0.76, 0, 0.24, 1],
+              type: 'spring',
+              bounce: 0,
+              duration: 0.9,
             }}
             style={{
               position: 'fixed',
               inset: 0,
               zIndex: 9999,
+              willChange: 'transform, opacity',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
             }}
           >
             <WelcomeScreen />
