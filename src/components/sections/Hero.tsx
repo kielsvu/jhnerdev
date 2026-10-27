@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import TextType from "@/components/band/TextType";
 import App from "@/components/band/App";
 
-const skills = ["TypeScript", "React.js", "Tailwind"];
+const skills = ["TypeScript", "React.js", "Tailwind"]
+const typingTexts = ["Senior High Student", "Junior Developer", "Happy coding!"];
 
 type HeroProps = {
   showApp: boolean;
@@ -157,7 +158,7 @@ export default function Hero({ showApp }: HeroProps) {
             }}
           >
             <TextType
-              text={["Senior High Student", "Junior Developer", "Happy coding!"]}
+              text={typingTexts}
               typingSpeed={75}
               pauseDuration={1500}
               showCursor
