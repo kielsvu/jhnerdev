@@ -1,6 +1,6 @@
-# Kiel
+# Jhner
 
-Personal portfolio for Kiel Torres
+Personal portfolio for Jhner Torres
 
 ## Vercel
 
