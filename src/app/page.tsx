@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useState, useRef } from 'react'
+import { motion, useAnimation } from 'framer-motion'
 
 import BlackHole from '@/components/BlackHole'
 import Navbar from '@/components/ui/Navbar'
@@ -15,11 +15,13 @@ import { hasPlayedIntro, setIntroPlayed } from '@/lib/introState'
 
 export default function Home() {
   const [showWelcome, setShowWelcome] = useState(false)
-  const [showApp, setShowApp]         = useState(true)
+  const [showApp, setShowApp] = useState(true)
+  const controls = useAnimation()
+  const exitingRef = useRef(false)
 
   useEffect(() => {
     const currentHash = window.location.hash
-    const pathname    = window.location.pathname
+    const pathname = window.location.pathname
 
     if (currentHash === '#portfolio') {
       setShowWelcome(false)
@@ -27,16 +29,22 @@ export default function Home() {
       return
     }
 
-    const navEntries     = performance.getEntriesByType('navigation')
-    const navigationType = navEntries.length > 0
-      ? (navEntries[0] as PerformanceNavigationTiming).type
-      : null
+    const navEntries = performance.getEntriesByType('navigation')
+    const navigationType =
+      navEntries.length > 0
+        ? (navEntries[0] as PerformanceNavigationTiming).type
+        : null
+
     const isReload = navigationType === 'reload'
 
     if (isReload && pathname === '/') {
       sessionStorage.removeItem('introPlayed')
       sessionStorage.removeItem('heroPlayed')
-      if (window.location.hash) history.replaceState(null, '', '/')
+
+      if (window.location.hash) {
+        history.replaceState(null, '', '/')
+      }
+
       window.scrollTo({ top: 0, behavior: 'instant' })
     }
 
@@ -44,9 +52,18 @@ export default function Home() {
       setShowWelcome(true)
       setShowApp(false)
 
-      const timer = setTimeout(() => {
-        setShowWelcome(false)
+      const timer = setTimeout(async () => {
+        if (exitingRef.current) return
+        exitingRef.current = true
+
         setShowApp(true)
+
+        await controls.start({
+          y: '-100%',
+          transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1] },
+        })
+
+        setShowWelcome(false)
         setIntroPlayed()
       }, 2800)
 
@@ -55,7 +72,7 @@ export default function Home() {
       setShowWelcome(false)
       setShowApp(true)
     }
-  }, [])
+  }, [controls])
 
   return (
     <main style={{ position: 'relative', overflow: 'hidden' }}>
@@ -79,33 +96,18 @@ export default function Home() {
         <ContactSection />
       </div>
 
-      <AnimatePresence>
-        {showWelcome && (
-          <motion.div
-            initial={{ y: 0, opacity: 1 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: '-100%', opacity: 0 }}
-            onAnimationStart={(definition) => {
-              if (definition === 'exit') setShowApp(true)
-            }}
-            transition={{
-              type: 'spring',
-              bounce: 0,
-              duration: 0.9,
-            }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 9999,
-              willChange: 'transform, opacity',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          >
-            <WelcomeScreen />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {showWelcome && (
+        <motion.div
+          animate={controls}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+          }}
+        >
+          <WelcomeScreen />
+        </motion.div>
+      )}
     </main>
   )
 }
