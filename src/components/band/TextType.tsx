@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useState, useMemo, type ReactNode } from "react"
 
 type TextTypeProps = {
   text: string | string[]
@@ -21,7 +21,7 @@ export default function TextType({
   cursorCharacter = "_",
   cursorClassName = "",
 }: TextTypeProps) {
-  const texts = Array.isArray(text) ? text : [text]
+  const texts = useMemo(() => (Array.isArray(text) ? text : [text]), [text])
   const [index, setIndex] = useState(0)
   const [value, setValue] = useState("")
   const [deleting, setDeleting] = useState(false)
