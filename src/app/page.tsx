@@ -103,6 +103,8 @@ export default function Home() {
             position: 'fixed',
             inset: 0,
             zIndex: 9999,
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
           }}
         >
           <WelcomeScreen />
