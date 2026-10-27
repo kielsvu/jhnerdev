@@ -34,7 +34,6 @@ export default function TextType({
     const finished = value === target
     const empty = value.length === 0
 
-    // Check deleting FIRST — otherwise finished+deleting loops forever at pauseDuration
     const delay = deleting
       ? empty ? 300 : deletingSpeed
       : finished ? pauseDuration : typingSpeed
