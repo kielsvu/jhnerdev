@@ -6,7 +6,7 @@ import TextType from "@/components/band/TextType";
 import App from "@/components/band/App";
 
 const skills = ["TypeScript", "React.js", "Tailwind"]
-const typingTexts = ["Senior High Student", "Junior Developer", "Happy coding!"];
+const typingTexts = ["Junior Developer", "UI/UX Developer", "Database Developer"];
 
 type HeroProps = {
   showApp: boolean;
