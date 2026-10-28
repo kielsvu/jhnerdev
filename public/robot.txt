@@ -1,0 +1,33 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: *
+Disallow: /
+
+Disallow: /admin
+Disallow: /wp-admin
+Disallow: /wp-login.php
+Disallow: /.env
+Disallow: /.env.local
+Disallow: /config
+Disallow: /config.php
+Disallow: /phpmyadmin
+Disallow: /.git
+Disallow: /xmlrpc.php
+Disallow: /api/debug
+Disallow: /api/admin
+Disallow: /server-status
+Disallow: /actuator
+Disallow: /console
+Disallow: /shell
+Disallow: /backup
+Disallow: /dump
