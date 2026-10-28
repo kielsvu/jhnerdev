@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import TextType from "@/components/band/TextType";
 import App from "@/components/band/App";
 
-const skills = ["TypeScript", "React.js", "Tailwind"]
+const skills = ["TypeScript", "PL/SQL", "Tailwind"]
 const typingTexts = ["Junior Developer", "UI/UX Developer", "Database Developer"];
 
 type HeroProps = {
