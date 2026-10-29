@@ -2,12 +2,10 @@
 
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react'
 import usePortfolio from '@/hooks/usePortfolio'
 import PortfolioCard from './PortfolioCard'
-import Folder from '@/components/ui/Folder'
 import TechStackIcon from './TechStackIcon'
-import type { LocalTechStack } from '@/lib/portfolioData'
 
 const sp  = { type: 'spring' as const, bounce: 0,    duration: 0.5  }
 const spB = { type: 'spring' as const, bounce: 0.12, duration: 0.42 }
@@ -24,75 +22,33 @@ const cardVariants = {
   exit:    { opacity: 0, y: -20 },
 }
 
+const techContainer = {
+  animate: { transition: { staggerChildren: 0.035 } },
+}
+
+const techItem = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0, transition: { type: 'spring' as const, bounce: 0, duration: 0.4 } },
+}
+
 const seeMoreVariants = {
   initial: { opacity: 0, y: 8  },
   animate: { opacity: 1, y: 0  },
   exit:    { opacity: 0, y: -8 },
 }
 
-const TECH_GROUPS = [
-  {
-    label: 'Frontend',
-    color: '#3d8bff',
-    ids: ['react', 'nextjs', 'tailwind', 'html', 'css', 'typescript'],
-  },
-  {
-    label: 'Scripting',
-    color: '#B284FF',
-    ids: ['javascript', 'jsx', 'tsx', 'python', 'lua', 'php'],
-  },
-  {
-    label: 'Compiled',
-    color: '#fb923c',
-    ids: ['java', 'kotlin', 'c', 'cpp', 'csharp', 'assembly'],
-  },
-  {
-    label: 'Backend & Tools',
-    color: '#4ade80',
-    ids: ['node', 'sql', 'git', 'github'],
-  },
-]
+const ITEMS_PER_PAGE = 10
 
 const TABS = ['projects', 'techstack'] as const
 type Tab = typeof TABS[number]
 const TAB_LABELS: Record<Tab, string> = { projects: 'Projects', techstack: 'Tech Stack' }
-
-function TechFolderItem({ item }: { item: LocalTechStack }) {
-  return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: 10,
-      background: '#141414',
-    }}>
-      <TechStackIcon
-        name={item.logo_key}
-        className="w-10 h-10"
-        aria-label={item.name}
-      />
-      <span style={{
-        fontSize: 10,
-        fontFamily: "'DM Mono', monospace",
-        color: 'rgba(255,255,255,0.7)',
-        textAlign: 'center',
-        letterSpacing: '0.05em',
-        lineHeight: 1.3,
-      }}>
-        {item.name}
-      </span>
-    </div>
-  )
-}
 
 export default function PortfolioShowcase() {
   const { projects, techStacks, loading } = usePortfolio()
   const [activeTab, setActiveTab]             = useState<Tab>('projects')
   const [showAllProjects, setShowAllProjects] = useState(false)
   const [hasHover, setHasHover]               = useState(false)
+  const [techPage, setTechPage]               = useState(0)
 
   useEffect(() => {
     setHasHover(window.matchMedia('(hover: hover) and (pointer: fine)').matches)
@@ -103,21 +59,20 @@ export default function PortfolioShowcase() {
     [showAllProjects, projects]
   )
 
+  const totalTechPages = Math.ceil(techStacks.length / ITEMS_PER_PAGE)
+
+  const paginatedTechs = useMemo(
+    () => techStacks.slice(techPage * ITEMS_PER_PAGE, (techPage + 1) * ITEMS_PER_PAGE),
+    [techStacks, techPage]
+  )
+
   const handleTabClick = useCallback((tab: Tab) => {
     setActiveTab(tab)
     if (tab !== 'projects') setShowAllProjects(false)
+    if (tab !== 'techstack') setTechPage(0)
   }, [])
 
   const toggleShowAll = useCallback(() => setShowAllProjects(v => !v), [])
-
-  const techGroups = useMemo(() => {
-    return TECH_GROUPS.map(group => ({
-      ...group,
-      items: group.ids
-        .map(id => techStacks.find(t => t.id === id))
-        .filter((t): t is LocalTechStack => Boolean(t)),
-    })).filter(g => g.items.length > 0)
-  }, [techStacks])
 
   return (
     <section
@@ -214,42 +169,97 @@ export default function PortfolioShowcase() {
           )}
 
           {activeTab === 'techstack' && (
-            <div className="flex flex-col items-center gap-4">
-              <p className="text-white/40 text-xs font-mono tracking-widest uppercase mb-2">
-                Click a folder to explore
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center w-full">
-                {!loading && techGroups.map((group, i) => (
+            <div className="flex flex-col items-center gap-8">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={techPage}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16 }}
+                  transition={sp}
+                  className="w-full"
+                >
                   <motion.div
-                    key={group.label}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ ...spB, delay: i * 0.08 }}
-                    className="flex flex-col items-center gap-3"
+                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 max-w-5xl w-full mx-auto"
+                    variants={techContainer}
+                    initial="initial"
+                    animate="animate"
                   >
-                    <Folder
-                      label={group.label}
-                      color={group.color}
-                      paperColor="#141414"
-                      theme="dark"
-                      size={0.8}
-                      peek
-                      draggable={false}
-                      zoomOnClick={false}
-                      bounce={0.3}
-                      tilt={0.4}
-                      items={group.items.map(item => ({
-                        content: <TechFolderItem item={item} />,
-                      }))}
-                    />
+                    {!loading && paginatedTechs.map((item) => (
+                      <TechCard key={item.id} item={item} hasHover={hasHover} />
+                    ))}
                   </motion.div>
-                ))}
-              </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {totalTechPages > 1 && (
+                <div className="flex items-center gap-4">
+                  <motion.button
+                    onClick={() => setTechPage(p => Math.max(0, p - 1))}
+                    disabled={techPage === 0}
+                    whileTap={techPage > 0 ? { scale: 0.95, transition: { type: 'spring', bounce: 0, duration: 0.14 } } : undefined}
+                    className="w-10 h-10 rounded-full border border-white/10 bg-white/[0.05] flex items-center justify-center transition-opacity"
+                    style={{ opacity: techPage === 0 ? 0.3 : 1 }}
+                    aria-label="Previous page"
+                  >
+                    <ChevronLeft size={16} />
+                  </motion.button>
+
+                  <span className="text-xs font-mono text-white/40 tracking-widest">
+                    {techPage + 1} / {totalTechPages}
+                  </span>
+
+                  <motion.button
+                    onClick={() => setTechPage(p => Math.min(totalTechPages - 1, p + 1))}
+                    disabled={techPage === totalTechPages - 1}
+                    whileTap={techPage < totalTechPages - 1 ? { scale: 0.95, transition: { type: 'spring', bounce: 0, duration: 0.14 } } : undefined}
+                    className="w-10 h-10 rounded-full border border-white/10 bg-white/[0.05] flex items-center justify-center transition-opacity"
+                    style={{ opacity: techPage === totalTechPages - 1 ? 0.3 : 1 }}
+                    aria-label="Next page"
+                  >
+                    <ChevronRight size={16} />
+                  </motion.button>
+                </div>
+              )}
             </div>
           )}
         </motion.div>
       </AnimatePresence>
     </section>
+  )
+}
+
+function TechCard({
+  item,
+  hasHover,
+}: {
+  item: { id: string | number; name: string; logo_key?: string }
+  hasHover: boolean
+}) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <motion.div
+      variants={techItem}
+      whileHover={hasHover ? { y: -5, transition: { type: 'spring', bounce: 0.2, duration: 0.28 } } : undefined}
+      whileTap={{ scale: 0.96, transition: { type: 'spring', bounce: 0, duration: 0.14 } }}
+      onHoverStart={() => hasHover && setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      className="group rounded-[24px] border border-white/10 bg-white/[0.07] flex flex-col items-center justify-center gap-3 h-[110px] sm:h-[125px] w-full max-w-[125px] mx-auto"
+    >
+      <div className="relative flex items-center justify-center [--tech-icon-bg:#080808]">
+        {hovered && (
+          <div className="absolute w-[56px] h-[56px] rounded-full bg-white/15 opacity-60" />
+        )}
+        <TechStackIcon
+          name={item.logo_key || item.name}
+          className="relative z-10 w-[52px] h-[52px] text-white"
+          aria-label={item.name}
+        />
+      </div>
+      <p className="text-[11px] text-white/80 text-center leading-tight px-2 line-clamp-1">
+        {item.name}
+      </p>
+    </motion.div>
   )
 }
