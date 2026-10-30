@@ -49,9 +49,18 @@ export default function PortfolioShowcase() {
   const [showAllProjects, setShowAllProjects] = useState(false)
   const [hasHover, setHasHover]               = useState(false)
   const [techPage, setTechPage]               = useState(0)
+  const [isDesktop, setIsDesktop]             = useState(false)
 
   useEffect(() => {
     setHasHover(window.matchMedia('(hover: hover) and (pointer: fine)').matches)
+    const mq = window.matchMedia('(min-width: 1024px)')
+    setIsDesktop(mq.matches)
+    const onChange = (e: MediaQueryListEvent) => {
+      setIsDesktop(e.matches)
+      if (e.matches) setTechPage(0)
+    }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
   }, [])
 
   const displayedProjects = useMemo(
@@ -62,8 +71,10 @@ export default function PortfolioShowcase() {
   const totalTechPages = Math.ceil(techStacks.length / ITEMS_PER_PAGE)
 
   const paginatedTechs = useMemo(
-    () => techStacks.slice(techPage * ITEMS_PER_PAGE, (techPage + 1) * ITEMS_PER_PAGE),
-    [techStacks, techPage]
+    () => isDesktop
+      ? techStacks
+      : techStacks.slice(techPage * ITEMS_PER_PAGE, (techPage + 1) * ITEMS_PER_PAGE),
+    [techStacks, techPage, isDesktop]
   )
 
   const handleTabClick = useCallback((tab: Tab) => {
@@ -192,7 +203,7 @@ export default function PortfolioShowcase() {
                 </motion.div>
               </AnimatePresence>
 
-              {totalTechPages > 1 && (
+              {!isDesktop && totalTechPages > 1 && (
                 <div className="flex items-center gap-4">
                   <motion.button
                     onClick={() => setTechPage(p => Math.max(0, p - 1))}
