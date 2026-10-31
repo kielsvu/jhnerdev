@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    path: '/dev.email',
+    path: '/',
     maxAge: 300,
   })
   return res
