@@ -23,7 +23,7 @@ const allowedBots = [
 const honeypotPaths = [
   '/admin', '/wp-admin', '/wp-login.php', '/.env', '/.env.local',
   '/config', '/config.php', '/phpmyadmin', '/.git', '/xmlrpc.php',
-  '/api/debug', '/api/admin', '/server-status', '/actuator',
+  '/api/debug', '/server-status', '/actuator',
   '/console', '/shell', '/backup', '/dump',
 ]
 
