@@ -99,7 +99,7 @@ export function sessionCookieOptions() {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax' as const,
-    path: '/dev.email',
+    path: '/',
     maxAge: SESSION_MAX_AGE,
   }
 }
