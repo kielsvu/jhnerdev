@@ -20,16 +20,21 @@ export async function createSession(payload: {
   const id = generateSessionId()
   const now = new Date()
 
-  await db.from('admin_sessions').insert({
-    id,
-    ...payload,
-    last_active: now.toISOString(),
-    created_at: now.toISOString(),
-    expires_at: new Date(now.getTime() + SESSION_MAX_AGE * 1000).toISOString(),
-    revoked: false,
-  })
+  const { error } = await db.from('admin_sessions').insert({
+  id,
+  ...payload,
+  last_active: now.toISOString(),
+  created_at: now.toISOString(),
+  expires_at: new Date(now.getTime() + SESSION_MAX_AGE * 1000).toISOString(),
+  revoked: false,
+})
 
-  return id
+if (error) {
+  console.error('[AUTH] Session creation failed:', error.message)
+  throw new Error('Failed to create admin session')
+}
+
+return id
 }
 
 export async function validateSession(sessionId: string): Promise<{
