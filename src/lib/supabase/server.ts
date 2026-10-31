@@ -1,9 +1,10 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-export async function createSupabaseServerClient() {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function createSupabaseServerClient(): Promise<ReturnType<typeof createServerClient<any>>> {
   const cookieStore = await cookies()
-  return createServerClient(
+  return createServerClient<any>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
