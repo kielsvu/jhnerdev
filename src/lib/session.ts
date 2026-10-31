@@ -7,7 +7,7 @@ const SESSION_MAX_AGE = 8 * 60 * 60        // 8h in seconds
 const INACTIVITY_TIMEOUT = 10 * 60 * 1000  // 10min in ms
 
 export function generateSessionId(): string {
-  return crypto.randomBytes(32).toString('hex')
+  return crypto.randomUUID()
 }
 
 export async function createSession(payload: {
