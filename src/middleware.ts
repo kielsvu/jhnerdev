@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const SESSION_COOKIE = 'admin_session'
 
-export async function proxy(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   // Only protect /dev.email/* — skip login page and API auth routes
