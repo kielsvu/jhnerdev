@@ -356,7 +356,6 @@ export default function Dashboard() {
                       width: '100%',
                       textAlign: 'left',
                       padding: '1rem 1.25rem',
-                      borderBottom: '1px solid var(--border)',
                       background: selected?.id === msg.id ? 'var(--bg-card)' : 'transparent',
                       border: 'none',
                       borderBottom: '1px solid var(--border)',
