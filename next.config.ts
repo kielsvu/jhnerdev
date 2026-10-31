@@ -21,7 +21,7 @@ const securityHeaders = [
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "worker-src 'self' blob:",
       "img-src 'self' data: blob: https:",
-      "connect-src 'self' https://ipinfo.io https://discord.com",
+      `connect-src 'self' https://ipinfo.io https://discord.com ${process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''} wss://${(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').replace('https://', '')}`,
       "frame-ancestors 'none'",
     ].join("; "),
   },
