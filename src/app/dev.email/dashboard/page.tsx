@@ -4,8 +4,6 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 type Message = {
   id: string
   name: string
@@ -46,183 +44,8 @@ type ActiveSession = {
 type Section = 'inbox' | 'unread' | 'archived' | 'security' | 'devices' | 'sessions'
 
 const INACTIVITY_TIMEOUT = 10 * 60 * 1000
-
-// ─── Spring config (Apple-style: critically damped, no overshoot) ─────────────
-const spring = { type: 'spring', bounce: 0, duration: 0.32 } as const
-const springFast = { type: 'spring', bounce: 0, duration: 0.2 } as const
-
-// ─── Icons (inline SVG, no extra dep) ────────────────────────────────────────
-
-function IconInbox({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M1 10h3.5l1 2h5l1-2H15" /><rect x="1" y="2" width="14" height="12" rx="2" />
-    </svg>
-  )
-}
-
-function IconUnread({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 4l6 5 6-5" /><rect x="1" y="3" width="14" height="10" rx="1.5" />
-    </svg>
-  )
-}
-
-function IconArchive({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="1" y="2" width="14" height="3" rx="1" /><path d="M2 5v8a1 1 0 001 1h10a1 1 0 001-1V5" /><path d="M6 9h4" />
-    </svg>
-  )
-}
-
-function IconShield({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8 2L3 4v4c0 3 2.5 5.5 5 6 2.5-.5 5-3 5-6V4L8 2z" />
-    </svg>
-  )
-}
-
-function IconDevice({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="3" width="9" height="11" rx="1.5" /><path d="M5 14h3" /><rect x="11" y="6" width="3" height="5" rx="1" />
-    </svg>
-  )
-}
-
-function IconSessions({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="8" cy="5" r="3" /><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" />
-    </svg>
-  )
-}
-
-function IconClose({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M4 4l8 8M12 4l-8 8" />
-    </svg>
-  )
-}
-
-function IconMenu({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M3 5h12M3 9h12M3 13h12" />
-    </svg>
-  )
-}
-
-function IconBack({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10 4L6 8l4 4" />
-    </svg>
-  )
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function formatDate(iso: string) {
-  const d = new Date(iso)
-  const diff = Date.now() - d.getTime()
-  if (diff < 60_000) return 'just now'
-  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m`
-  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h`
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
-
-function riskBg(level: string) {
-  if (level === 'critical') return 'rgba(239,68,68,0.15)'
-  if (level === 'high') return 'rgba(249,115,22,0.15)'
-  if (level === 'medium') return 'rgba(234,179,8,0.12)'
-  return 'rgba(148,163,184,0.1)'
-}
-
-function riskColor(level: string) {
-  if (level === 'critical') return '#f87171'
-  if (level === 'high') return '#fb923c'
-  if (level === 'medium') return '#facc15'
-  return '#94a3b8'
-}
-
-// ─── Style tokens (matches design system output) ──────────────────────────────
-// Dark glassmorphism, Fira Sans, dense dashboard layout
-
-const t = {
-  bg: '#0F172A',
-  bgCard: '#1B2336',
-  bgGlass: 'rgba(30,41,59,0.7)',
-  border: 'rgba(71,85,105,0.5)',
-  borderGlass: 'rgba(255,255,255,0.06)',
-  textPrimary: '#F8FAFC',
-  textSecondary: '#CBD5E1',
-  textMuted: '#64748B',
-  accent: '#22C55E',
-  accentDim: 'rgba(34,197,94,0.12)',
-  destructive: '#f87171',
-  destructiveDim: 'rgba(248,113,113,0.12)',
-  fontSans: "'Fira Sans', system-ui, sans-serif",
-  fontMono: "'Fira Code', 'Fira Mono', monospace",
-} as const
-
-// ─── Shared small components ──────────────────────────────────────────────────
-
-function Badge({ level }: { level: string }) {
-  return (
-    <span style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      padding: '2px 7px',
-      borderRadius: '5px',
-      fontSize: '10px',
-      fontWeight: 600,
-      letterSpacing: '0.05em',
-      textTransform: 'uppercase' as const,
-      background: riskBg(level),
-      color: riskColor(level),
-      border: `1px solid ${riskColor(level)}22`,
-      fontFamily: t.fontMono,
-    }}>
-      {level}
-    </span>
-  )
-}
-
-function UnreadDot() {
-  return (
-    <span style={{
-      width: 6,
-      height: 6,
-      borderRadius: '50%',
-      background: t.accent,
-      flexShrink: 0,
-      boxShadow: `0 0 6px ${t.accent}`,
-    }} />
-  )
-}
-
-function LoadingState() {
-  return (
-    <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: t.textMuted, fontSize: '0.8125rem', fontFamily: t.fontMono }}>
-      loading…
-    </div>
-  )
-}
-
-function EmptyState({ label }: { label: string }) {
-  return (
-    <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: t.textMuted, fontSize: '0.8125rem', fontFamily: t.fontMono }}>
-      {label}
-    </div>
-  )
-}
-
-// ─── Main ─────────────────────────────────────────────────────────────────────
+const sp = { type: 'spring' as const, bounce: 0, duration: 0.42 }
+const spFast = { type: 'spring' as const, bounce: 0, duration: 0.28 }
 
 export default function Dashboard() {
   const [section, setSection] = useState<Section>('inbox')
@@ -235,16 +58,25 @@ export default function Dashboard() {
   const [search, setSearch] = useState('')
   const [totalMessages, setTotalMessages] = useState(0)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [sessionInfo, setSessionInfo] = useState<{ last_active?: string; expires_at?: string } | null>(null)
   const [locked, setLocked] = useState(false)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const inactivityTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const supabase = createSupabaseBrowserClient()
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   // Session check
   useEffect(() => {
     fetch('/api/admin/auth/session')
       .then(r => r.json())
-      .then(d => { if (!d.authenticated) window.location.href = '/dev.email/login' })
+      .then(d => { if (!d.authenticated) window.location.href = '/dev.email/login'; else setSessionInfo(d) })
       .catch(() => { window.location.href = '/dev.email/login' })
   }, [])
 
@@ -264,7 +96,7 @@ export default function Dashboard() {
     }
   }, [resetInactivity])
 
-  // Realtime
+  // Realtime new messages
   useEffect(() => {
     const channel = supabase
       .channel('messages')
@@ -278,19 +110,19 @@ export default function Dashboard() {
 
   const fetchMessages = useCallback(async (activeSection: Section, q = '') => {
     const statusMap: Partial<Record<Section, string>> = { unread: 'unread', archived: 'archived' }
+    const statusParam = statusMap[activeSection]
     const params = new URLSearchParams({ limit: '30' })
-    if (statusMap[activeSection]) params.set('status', statusMap[activeSection]!)
+    if (statusParam) params.set('status', statusParam)
     if (q) params.set('q', q)
     setLoading(true)
-    const [res, unreadRes] = await Promise.all([
-      fetch(`/api/admin/messages?${params}`),
-      fetch('/api/admin/messages?status=unread&limit=1'),
-    ])
-    const [data, unreadData] = await Promise.all([res.json(), unreadRes.json()])
+    const res = await fetch(`/api/admin/messages?${params}`)
+    const data = await res.json()
     setMessages(data.messages ?? [])
     setTotalMessages(data.total ?? 0)
-    setUnreadCount(unreadData.total ?? 0)
     setLoading(false)
+    const ur = await fetch('/api/admin/messages?status=unread&limit=1')
+    const ud = await ur.json()
+    setUnreadCount(ud.total ?? 0)
   }, [])
 
   const fetchEvents = useCallback(async () => {
@@ -319,9 +151,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     setSelected(null)
-    if (['inbox', 'unread', 'archived'].includes(section)) {
-      fetchMessages(section as Section, search)
-    } else if (section === 'security') fetchEvents()
+    if (section === 'inbox' || section === 'unread' || section === 'archived') fetchMessages(section, search)
+    else if (section === 'security') fetchEvents()
     else if (section === 'devices') fetchDevices()
     else if (section === 'sessions') fetchSessions()
   }, [section]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -371,33 +202,20 @@ export default function Dashboard() {
 
   function changeSection(s: Section) {
     setSection(s)
-    setSidebarOpen(false)
+    setDrawerOpen(false)
   }
-
-  // ── Locked screen ──────────────────────────────────────────────────────────
 
   if (locked) {
     return (
-      <div style={{
-        minHeight: '100dvh',
-        background: t.bg,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1.5rem',
-        fontFamily: t.fontSans,
-      }}>
-        <div style={{ textAlign: 'center', maxWidth: 280 }}>
-          <div style={{ width: 48, height: 48, borderRadius: '50%', background: t.bgCard, border: `1px solid ${t.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-            <IconShield size={20} />
-          </div>
-          <p style={{ fontSize: '0.875rem', color: t.textSecondary, marginBottom: '1.5rem', lineHeight: 1.6 }}>
-            Session locked due to inactivity.
+      <div style={{ minHeight: '100dvh', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
+        <div style={{ textAlign: 'center', maxWidth: '280px' }}>
+          <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
+            Session locked
           </p>
-          <button
-            onClick={() => (window.location.href = '/dev.email/login')}
-            style={fullBtn}
-          >
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1.75rem', lineHeight: 1.6 }}>
+            Locked due to inactivity.
+          </p>
+          <button onClick={() => { window.location.href = '/dev.email/login' }} style={primaryBtn}>
             Sign in again
           </button>
         </div>
@@ -405,372 +223,377 @@ export default function Dashboard() {
     )
   }
 
-  // ── Nav items ──────────────────────────────────────────────────────────────
-
-  const navItems: { id: Section; label: string; icon: React.ReactNode; shortLabel: string }[] = [
-    { id: 'inbox',    label: 'Inbox',        shortLabel: 'Inbox',    icon: <IconInbox /> },
-    { id: 'unread',   label: unreadCount > 0 ? `Unread (${unreadCount})` : 'Unread', shortLabel: 'Unread', icon: <IconUnread /> },
-    { id: 'archived', label: 'Archived',     shortLabel: 'Archive',  icon: <IconArchive /> },
-    { id: 'security', label: 'Security log', shortLabel: 'Security', icon: <IconShield /> },
-    { id: 'devices',  label: 'Devices',      shortLabel: 'Devices',  icon: <IconDevice /> },
-    { id: 'sessions', label: 'Sessions',     shortLabel: 'Sessions', icon: <IconSessions /> },
+  const navItems: { id: Section; label: string; short: string }[] = [
+    { id: 'inbox',    label: 'Inbox',        short: 'Inbox' },
+    { id: 'unread',   label: unreadCount > 0 ? `Unread (${unreadCount})` : 'Unread', short: 'Unread' },
+    { id: 'archived', label: 'Archived',     short: 'Archive' },
+    { id: 'security', label: 'Security log', short: 'Security' },
+    { id: 'devices',  label: 'Devices',      short: 'Devices' },
+    { id: 'sessions', label: 'Sessions',     short: 'Sessions' },
   ]
 
-  const isMessageSection = ['inbox', 'unread', 'archived'].includes(section)
+  const isMessageSection = section === 'inbox' || section === 'unread' || section === 'archived'
 
   return (
-    <div style={{ minHeight: '100dvh', background: t.bg, display: 'flex', fontFamily: t.fontSans, position: 'relative' }}>
+    <div style={{ height: '100dvh', background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
-      {/* ── Mobile sidebar overlay ─────────────────────────────────────────── */}
+      {/* Mobile drawer backdrop */}
       <AnimatePresence>
-        {sidebarOpen && (
+        {isMobile && drawerOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={springFast}
-            onClick={() => setSidebarOpen(false)}
-            style={{
-              position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
-              backdropFilter: 'blur(4px)', zIndex: 40,
-            }}
+            transition={spFast}
+            onClick={() => setDrawerOpen(false)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 40 }}
           />
         )}
       </AnimatePresence>
 
-      {/* ── Sidebar ────────────────────────────────────────────────────────── */}
-      <motion.aside
-        initial={false}
-        animate={{ x: sidebarOpen ? 0 : '-100%' }}
-        transition={spring}
-        style={{
-          position: 'fixed', top: 0, left: 0, bottom: 0,
-          width: 220, zIndex: 50,
-          background: t.bgGlass,
-          backdropFilter: 'blur(20px) saturate(180%)',
-          borderRight: `1px solid ${t.borderGlass}`,
-          display: 'flex', flexDirection: 'column',
-          padding: '1.25rem 0',
-        }}
-        // desktop: always show
-        className="sidebar-aside"
-      >
-        <div style={{ padding: '0 1.25rem 1.25rem', borderBottom: `1px solid ${t.borderGlass}` }}>
-          <p style={{ fontSize: 10, letterSpacing: '0.14em', color: t.textMuted, textTransform: 'uppercase', fontFamily: t.fontMono }}>
-            jhner.dev
-          </p>
-          <p style={{ fontSize: '0.8125rem', color: t.textSecondary, marginTop: 3 }}>
-            Admin
-          </p>
-        </div>
+      {/* Sidebar — desktop sticky, mobile drawer */}
+      <AnimatePresence>
+        {(!isMobile || drawerOpen) && (
+          <motion.aside
+            key="sidebar"
+            initial={isMobile ? { x: -280 } : false}
+            animate={{ x: 0 }}
+            exit={isMobile ? { x: -280 } : undefined}
+            transition={sp}
+            style={{
+              position: isMobile ? 'fixed' : 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              width: isMobile ? 260 : 220,
+              zIndex: isMobile ? 50 : 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              background: 'rgba(13,13,13,0.85)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              borderRight: '1px solid var(--border)',
+              boxShadow: isMobile ? '0 0 0 1px rgba(255,255,255,0.04), 20px 0 60px rgba(0,0,0,0.4)' : 'none',
+            }}
+          >
+            <div style={{ padding: '1.5rem 1.25rem 1.25rem', borderBottom: '1px solid var(--border)' }}>
+              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '13px', fontWeight: 600, color: '#ffffff', letterSpacing: '0.06em' }}>
+                jhner.dev
+              </p>
+              <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', letterSpacing: '0.1em', color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: '3px' }}>
+                Admin
+              </p>
+            </div>
 
-        <nav style={{ flex: 1, padding: '0.75rem 0.625rem', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}>
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => changeSection(item.id)}
-              style={{
-                ...navBtn,
-                background: section === item.id ? 'rgba(34,197,94,0.1)' : 'transparent',
-                color: section === item.id ? t.accent : t.textSecondary,
-                borderLeft: section === item.id ? `2px solid ${t.accent}` : '2px solid transparent',
-              }}
-            >
-              <span style={{ opacity: section === item.id ? 1 : 0.7 }}>{item.icon}</span>
-              <span style={{ fontSize: '0.8125rem' }}>{item.label}</span>
-              {item.id === 'unread' && unreadCount > 0 && (
-                <span style={{
-                  marginLeft: 'auto', background: t.accent, color: t.bg,
-                  borderRadius: 99, fontSize: 10, fontWeight: 700,
-                  padding: '1px 6px', fontFamily: t.fontMono,
-                }}>
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-          ))}
-        </nav>
+            <nav style={{ flex: 1, padding: '0.875rem 0.625rem', overflowY: 'auto' }}>
+              {navItems.map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => changeSection(item.id)}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '9px 12px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    background: section === item.id ? 'rgba(255,255,255,0.07)' : 'transparent',
+                    boxShadow: section === item.id ? 'inset 0 1px 0 rgba(255,255,255,0.06)' : 'none',
+                    color: section === item.id ? 'var(--text-primary)' : 'var(--text-secondary)',
+                    fontSize: '0.875rem',
+                    fontFamily: "'Syne', sans-serif",
+                    cursor: 'pointer',
+                    transition: 'background 0.15s, color 0.15s',
+                    marginBottom: '2px',
+                    minHeight: '44px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  {item.label}
+                  {item.id === 'unread' && unreadCount > 0 && (
+                    <span style={{
+                      marginLeft: 'auto',
+                      background: '#3b82f6',
+                      color: '#fff',
+                      fontSize: '10px',
+                      fontFamily: "'DM Mono', monospace",
+                      fontWeight: 600,
+                      padding: '2px 6px',
+                      borderRadius: '999px',
+                      minWidth: '20px',
+                      textAlign: 'center',
+                    }}>
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </nav>
 
-        <div style={{ padding: '0.75rem 0.625rem', borderTop: `1px solid ${t.borderGlass}`, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <button onClick={() => logout(false)} style={ghostBtn}>Sign out</button>
-          <button onClick={() => logout(true)} style={{ ...ghostBtn, color: t.destructive }}>Sign out everywhere</button>
-        </div>
-      </motion.aside>
+            <div style={{ padding: '0.875rem 0.625rem', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <button onClick={() => logout(false)} style={ghostBtn}>Sign out</button>
+              <button onClick={() => logout(true)} style={{ ...ghostBtn, color: '#f87171' }}>Sign out everywhere</button>
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
 
-      {/* ── Desktop sidebar (always visible ≥768px) ────────────────────────── */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@300;400;500;600&display=swap');
-        * { box-sizing: border-box; margin: 0; }
-        @media (min-width: 768px) {
-          .sidebar-aside { position: sticky !important; top: 0 !important; height: 100vh !important; transform: none !important; }
-          .mobile-menu-btn { display: none !important; }
-          .mobile-bottom-nav { display: none !important; }
-          .main-content { margin-left: 0 !important; }
-        }
-        @media (max-width: 767px) {
-          .sidebar-aside { display: flex !important; }
-          .detail-mobile-back { display: flex !important; }
-        }
-        button:focus-visible { outline: 2px solid #22C55E; outline-offset: 2px; }
-        @media (prefers-reduced-motion: reduce) {
-          * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
-        }
-      `}</style>
-
-      {/* ── Main ───────────────────────────────────────────────────────────── */}
-      <main className="main-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: '100dvh' }}>
+      {/* Main shell */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        marginLeft: isMobile ? 0 : '220px',
+        overflow: 'hidden',
+        height: '100dvh',
+      }}>
 
         {/* Header */}
         <header style={{
-          padding: '0 1.25rem',
-          height: 52,
-          borderBottom: `1px solid ${t.borderGlass}`,
+          padding: isMobile ? '0 1rem' : '0 1.5rem',
+          height: '56px',
           display: 'flex',
           alignItems: 'center',
           gap: '0.75rem',
-          background: t.bgGlass,
-          backdropFilter: 'blur(20px)',
-          position: 'sticky',
-          top: 0,
-          zIndex: 20,
+          borderBottom: '1px solid var(--border)',
+          flexShrink: 0,
+          background: 'rgba(13,13,13,0.7)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          boxShadow: 'inset 0 -1px 0 rgba(255,255,255,0.04)',
         }}>
-          {/* Mobile hamburger */}
-          <button
-            className="mobile-menu-btn"
-            onClick={() => setSidebarOpen(v => !v)}
-            style={{ ...iconBtn, display: 'flex' }}
-            aria-label="Open menu"
-          >
-            <IconMenu />
-          </button>
+          {isMobile && (
+            <button
+              onClick={() => setDrawerOpen(v => !v)}
+              aria-label="Open menu"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '8px', minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '-8px' }}
+            >
+              <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
+                <rect width="18" height="1.5" rx="0.75" fill="currentColor"/>
+                <rect y="6.25" width="12" height="1.5" rx="0.75" fill="currentColor"/>
+                <rect y="12.5" width="18" height="1.5" rx="0.75" fill="currentColor"/>
+              </svg>
+            </button>
+          )}
 
-          <h2 style={{ fontSize: '0.875rem', fontWeight: 600, flex: 1, color: t.textPrimary, letterSpacing: '0.01em', textTransform: 'capitalize' }}>
+          <h1 style={{ fontSize: '0.9375rem', fontWeight: 600, flex: 1, textTransform: 'capitalize', letterSpacing: '-0.01em' }}>
             {section.replace('-', ' ')}
-          </h2>
+          </h1>
 
-          {isMessageSection && (
+          {isMessageSection && !isMobile && (
             <input
               type="search"
               placeholder="Search…"
               value={search}
               onChange={e => { setSearch(e.target.value); fetchMessages(section, e.target.value) }}
-              style={searchInput}
-              aria-label="Search messages"
+              style={{ ...inputStyle, width: '200px', padding: '7px 12px', fontSize: '0.875rem' }}
             />
           )}
 
           {isMessageSection && totalMessages > 0 && (
-            <span style={{ fontSize: '0.75rem', color: t.textMuted, fontFamily: t.fontMono, whiteSpace: 'nowrap' }}>
+            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
               {totalMessages}
             </span>
           )}
         </header>
 
-        {/* Content area */}
+        {/* Search bar on mobile for message sections */}
+        {isMessageSection && isMobile && (
+          <div style={{ padding: '8px 1rem', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+            <input
+              type="search"
+              placeholder="Search messages…"
+              value={search}
+              onChange={e => { setSearch(e.target.value); fetchMessages(section, e.target.value) }}
+              style={{ ...inputStyle, width: '100%', padding: '9px 12px', fontSize: '0.9rem' }}
+            />
+          </div>
+        )}
+
+        {/* Content */}
         <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
 
-          {/* ── Message list ──────────────────────────────────────────────── */}
+          {/* Message list */}
           {isMessageSection && (
-            <>
-              <AnimatePresence initial={false}>
-                <motion.div
-                  key="list"
-                  // On mobile: hide list when message is selected
-                  animate={{ x: selected ? '-100%' : '0%', opacity: selected ? 0 : 1 }}
-                  transition={spring}
+            <div
+              className="custom-scroll"
+              style={{
+                width: (!isMobile && selected) ? '340px' : '100%',
+                minWidth: (!isMobile && selected) ? '240px' : undefined,
+                borderRight: (!isMobile && selected) ? '1px solid var(--border)' : 'none',
+                overflowY: 'auto',
+                flexShrink: 0,
+              }}
+            >
+              {loading && <LoadingState />}
+              {!loading && messages.length === 0 && <EmptyState label="No messages" />}
+              {messages.map(msg => (
+                <button
+                  key={msg.id}
+                  onClick={() => openMessage(msg)}
                   style={{
-                    position: 'absolute', inset: 0,
-                    overflowY: 'auto',
-                    // desktop: side-by-side
-                  }}
-                  className="message-list-pane"
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '14px 1.25rem',
+                    background: (!isMobile && selected?.id === msg.id) ? 'rgba(255,255,255,0.04)' : 'transparent',
+                    border: 'none',
+                    borderBottom: '1px solid var(--border)',
+                    cursor: 'pointer',
+                    transition: 'background 0.12s',
+                    minHeight: '44px',
+                  } as React.CSSProperties}
                 >
-                  <style>{`
-                    @media (min-width: 768px) {
-                      .message-list-pane {
-                        position: static !important;
-                        width: ${selected ? '320px' : '100%'} !important;
-                        min-width: 240px !important;
-                        border-right: ${selected ? `1px solid ${t.borderGlass}` : 'none'} !important;
-                        opacity: 1 !important;
-                        transform: none !important;
-                        overflow-y: auto !important;
-                        flex-shrink: 0;
-                      }
-                      .message-detail-pane { display: flex !important; }
-                      .detail-mobile-back { display: none !important; }
-                    }
-                    @media (min-width: 768px) {
-                      .msg-area { display: flex !important; overflow: hidden !important; position: static !important; }
-                    }
-                  `}</style>
-                  {loading && <LoadingState />}
-                  {!loading && messages.length === 0 && <EmptyState label="No messages" />}
-                  {messages.map((msg, i) => (
-                    <motion.button
-                      key={msg.id}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ ...spring, delay: Math.min(i * 0.03, 0.18) }}
-                      onClick={() => openMessage(msg)}
-                      style={{
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '0.875rem 1.125rem',
-                        background: selected?.id === msg.id ? 'rgba(34,197,94,0.05)' : 'transparent',
-                        border: 'none',
-                        borderBottom: `1px solid ${t.borderGlass}`,
-                        cursor: 'pointer',
-                        transition: 'background 0.15s',
-                        display: 'block',
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 3 }}>
-                        {msg.status === 'unread' && <UnreadDot />}
-                        <span style={{
-                          fontSize: '0.8125rem',
-                          fontWeight: msg.status === 'unread' ? 600 : 400,
-                          color: t.textPrimary,
-                          flex: 1,
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        }}>
-                          {msg.name}
-                        </span>
-                        <span style={{ fontSize: '0.6875rem', color: t.textMuted, fontFamily: t.fontMono, whiteSpace: 'nowrap' }}>
-                          {formatDate(msg.created_at)}
-                        </span>
-                      </div>
-                      <p style={{ fontSize: '0.75rem', color: t.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {msg.subject}
-                      </p>
-                    </motion.button>
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-
-              {/* ── Message detail ──────────────────────────────────────── */}
-              <AnimatePresence>
-                {selected && (
-                  <motion.div
-                    key="detail"
-                    initial={{ x: '100%', opacity: 0 }}
-                    animate={{ x: '0%', opacity: 1 }}
-                    exit={{ x: '100%', opacity: 0 }}
-                    transition={spring}
-                    className="message-detail-pane"
-                    style={{
-                      position: 'absolute', inset: 0,
-                      overflowY: 'auto',
-                      padding: '1.5rem 1.25rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <div style={{ maxWidth: 620 }}>
-                      {/* Mobile back button */}
-                      <button
-                        className="detail-mobile-back"
-                        onClick={() => setSelected(null)}
-                        style={{ ...ghostBtn, display: 'none', alignItems: 'center', gap: 4, marginBottom: '1rem', padding: '6px 0' }}
-                      >
-                        <IconBack /> Back
-                      </button>
-
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.875rem', marginBottom: '1.25rem' }}>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 4, color: t.textPrimary, lineHeight: 1.4 }}>
-                            {selected.subject}
-                          </h3>
-                          <p style={{ fontSize: '0.8125rem', color: t.textSecondary }}>
-                            {selected.name}{' '}
-                            <a href={`mailto:${selected.email}`} style={{ color: t.textMuted, textDecoration: 'underline', textUnderlineOffset: 3 }}>
-                              {selected.email}
-                            </a>
-                          </p>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
-                            <span style={{ fontSize: '0.6875rem', color: t.textMuted, fontFamily: t.fontMono }}>
-                              {new Date(selected.created_at).toLocaleString()}
-                            </span>
-                            {selected.risk_level !== 'low' && <Badge level={selected.risk_level} />}
-                          </div>
-                        </div>
-                        {/* Close on desktop */}
-                        <button
-                          onClick={() => setSelected(null)}
-                          style={{ ...iconBtn, flexShrink: 0 }}
-                          aria-label="Close"
-                          className="detail-close-desktop"
-                        >
-                          <IconClose />
-                        </button>
-                      </div>
-
-                      <div style={{
-                        background: t.bgCard,
-                        border: `1px solid ${t.borderGlass}`,
-                        borderRadius: 10,
-                        padding: '1rem 1.25rem',
-                        fontSize: '0.875rem',
-                        lineHeight: 1.75,
-                        color: t.textPrimary,
-                        whiteSpace: 'pre-wrap',
-                        wordBreak: 'break-word',
-                        marginBottom: '1rem',
-                      }}>
-                        {selected.message}
-                      </div>
-
-                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                        {selected.status !== 'archived' && (
-                          <button onClick={() => updateStatus(selected.id, 'archived')} style={actionBtn}>Archive</button>
-                        )}
-                        {selected.status === 'archived' && (
-                          <button onClick={() => updateStatus(selected.id, 'read')} style={actionBtn}>Unarchive</button>
-                        )}
-                        {selected.status !== 'unread' && (
-                          <button onClick={() => updateStatus(selected.id, 'unread')} style={actionBtn}>Mark unread</button>
-                        )}
-                        <button
-                          onClick={() => { if (confirm('Delete this message permanently?')) deleteMessage(selected.id) }}
-                          style={{ ...actionBtn, color: t.destructive, borderColor: 'rgba(248,113,113,0.2)' }}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '5px' }}>
+                    {msg.status === 'unread' && (
+                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#3b82f6', flexShrink: 0 }} />
+                    )}
+                    <span style={{
+                      fontSize: '0.875rem',
+                      fontWeight: msg.status === 'unread' ? 600 : 400,
+                      color: 'var(--text-primary)',
+                      flex: 1,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      letterSpacing: '-0.01em',
+                    }}>
+                      {msg.name}
+                    </span>
+                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                      {formatDate(msg.created_at)}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {msg.subject}
+                  </p>
+                </button>
+              ))}
+            </div>
           )}
 
-          {/* ── Security events ───────────────────────────────────────────── */}
+          {/* Message detail — full-screen on mobile, split pane on desktop */}
+          <AnimatePresence>
+            {selected && isMessageSection && (
+              <motion.div
+                key={selected.id}
+                initial={isMobile ? { x: '100%' } : { opacity: 0 }}
+                animate={isMobile ? { x: 0 } : { opacity: 1 }}
+                exit={isMobile ? { x: '100%' } : { opacity: 0 }}
+                transition={isMobile ? sp : spFast}
+                className="custom-scroll"
+                style={{
+                  position: isMobile ? 'absolute' : 'relative',
+                  inset: isMobile ? 0 : undefined,
+                  zIndex: isMobile ? 10 : undefined,
+                  flex: 1,
+                  overflowY: 'auto',
+                  padding: isMobile ? '1.25rem 1rem 2rem' : '1.75rem 2rem',
+                  background: 'var(--bg-primary)',
+                }}
+              >
+                <div style={{ maxWidth: '640px' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                    <button
+                      onClick={() => setSelected(null)}
+                      aria-label="Back"
+                      style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border)', borderRadius: '8px', cursor: 'pointer', color: 'var(--text-secondary)', padding: '6px 10px', fontFamily: "'DM Mono', monospace", fontSize: '11px', whiteSpace: 'nowrap', minHeight: '36px' }}
+                    >
+                      ← Back
+                    </button>
+                    <div style={{ flex: 1 }} />
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                      {selected.status !== 'archived' && (
+                        <button onClick={() => updateStatus(selected.id, 'archived')} style={chipBtn}>Archive</button>
+                      )}
+                      {selected.status === 'archived' && (
+                        <button onClick={() => updateStatus(selected.id, 'read')} style={chipBtn}>Unarchive</button>
+                      )}
+                      {selected.status !== 'unread' && (
+                        <button onClick={() => updateStatus(selected.id, 'unread')} style={chipBtn}>Mark unread</button>
+                      )}
+                      <button
+                        onClick={() => { if (confirm('Delete this message permanently?')) deleteMessage(selected.id) }}
+                        style={{ ...chipBtn, color: '#f87171', borderColor: 'rgba(248,113,113,0.2)' }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+
+                  <h2 style={{ fontSize: isMobile ? '1rem' : '1.125rem', fontWeight: 600, marginBottom: '6px', letterSpacing: '-0.02em', lineHeight: 1.4 }}>
+                    {selected.subject}
+                  </h2>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                    {selected.name}{' '}
+                    <a href={`mailto:${selected.email}`} style={{ color: 'var(--text-muted)', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                      {selected.email}
+                    </a>
+                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1.5rem' }}>
+                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: 'var(--text-muted)' }}>
+                      {new Date(selected.created_at).toLocaleString()}
+                    </span>
+                    {selected.risk_level !== 'low' && (
+                      <span style={{ padding: '2px 7px', borderRadius: '5px', background: riskBg(selected.risk_level), color: riskColor(selected.risk_level), fontFamily: "'DM Mono', monospace", fontSize: '10px', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                        {selected.risk_level}
+                      </span>
+                    )}
+                  </div>
+
+                  <div style={{
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border)',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
+                    borderRadius: '12px',
+                    padding: '1.25rem 1.5rem',
+                    fontSize: '0.9375rem',
+                    lineHeight: 1.75,
+                    color: 'var(--text-primary)',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                  }}>
+                    {selected.message}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Security events */}
           {section === 'security' && (
-            <div style={{ flex: 1, overflowY: 'auto' }}>
+            <div className="custom-scroll" style={{ flex: 1, overflowY: 'auto' }}>
               {loading && <LoadingState />}
               {!loading && events.length === 0 && <EmptyState label="No security events" />}
-              {events.map((ev, i) => (
-                <motion.div
-                  key={ev.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: ev.reviewed ? 0.45 : 1, y: 0 }}
-                  transition={{ ...spring, delay: Math.min(i * 0.025, 0.15) }}
-                  style={{
-                    padding: '0.875rem 1.25rem',
-                    borderBottom: `1px solid ${t.borderGlass}`,
-                    display: 'flex',
-                    gap: '0.875rem',
-                    alignItems: 'flex-start',
-                  }}
-                >
-                  <Badge level={ev.severity} />
+              {events.map(ev => (
+                <div key={ev.id} style={{
+                  padding: '14px 1.25rem',
+                  borderBottom: '1px solid var(--border)',
+                  display: 'flex',
+                  gap: '12px',
+                  alignItems: 'flex-start',
+                  opacity: ev.reviewed ? 0.45 : 1,
+                  transition: 'opacity 0.2s',
+                }}>
+                  <span style={{
+                    padding: '2px 7px',
+                    borderRadius: '5px',
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: '10px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.04em',
+                    background: riskBg(ev.severity),
+                    color: riskColor(ev.severity),
+                    flexShrink: 0,
+                    marginTop: '2px',
+                  }}>
+                    {ev.severity}
+                  </span>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: '0.8125rem', color: t.textPrimary, marginBottom: 3, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-primary)', marginBottom: '4px', letterSpacing: '-0.01em' }}>
                       {ev.description}
                     </p>
-                    <p style={{ fontSize: '0.6875rem', color: t.textMuted, fontFamily: t.fontMono, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {ev.event_type} · {ev.ip_address} · {formatDate(ev.created_at)}
                     </p>
                   </div>
@@ -784,229 +607,267 @@ export default function Dashboard() {
                         })
                         setEvents(prev => prev.map(e => e.id === ev.id ? { ...e, reviewed: true } : e))
                       }}
-                      style={ghostBtn}
+                      style={{ ...ghostBtn, flexShrink: 0, minHeight: '44px' }}
                     >
                       Dismiss
                     </button>
                   )}
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
 
-          {/* ── Devices ───────────────────────────────────────────────────── */}
+          {/* Devices */}
           {section === 'devices' && (
-            <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem' }}>
+            <div className="custom-scroll" style={{ flex: 1, overflowY: 'auto', padding: '1.25rem' }}>
               {loading && <LoadingState />}
               {!loading && devices.length === 0 && <EmptyState label="No trusted devices" />}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 560 }}>
-                {devices.map((dev, i) => (
-                  <motion.div
-                    key={dev.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ ...spring, delay: Math.min(i * 0.04, 0.16) }}
-                    style={card}
-                  >
-                    <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: '0.8125rem', fontWeight: 500, marginBottom: 3, color: t.textPrimary }}>{dev.label}</p>
-                      <p style={{ fontSize: '0.6875rem', color: t.textMuted, fontFamily: t.fontMono }}>
-                        trusted {formatDate(dev.trusted_at)} · expires {formatDate(dev.expires_at)}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '560px' }}>
+                {devices.map(dev => (
+                  <div key={dev.id} style={card}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: '0.9rem', fontWeight: 500, marginBottom: '4px', letterSpacing: '-0.01em' }}>{dev.label}</p>
+                      <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: 'var(--text-muted)' }}>
+                        Trusted {formatDate(dev.trusted_at)} · expires {formatDate(dev.expires_at)}
                       </p>
                     </div>
-                    <button onClick={() => revokeDevice(dev.id)} style={{ ...ghostBtn, color: t.destructive }}>Revoke</button>
-                  </motion.div>
+                    <button onClick={() => revokeDevice(dev.id)} style={{ ...ghostBtn, color: '#f87171', flexShrink: 0 }}>
+                      Revoke
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* ── Sessions ──────────────────────────────────────────────────── */}
+          {/* Sessions */}
           {section === 'sessions' && (
-            <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem' }}>
+            <div className="custom-scroll" style={{ flex: 1, overflowY: 'auto', padding: '1.25rem' }}>
               {loading && <LoadingState />}
               {!loading && sessions.length === 0 && <EmptyState label="No active sessions" />}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 560 }}>
-                {sessions.map((sess, i) => (
-                  <motion.div
-                    key={sess.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ ...spring, delay: Math.min(i * 0.04, 0.16) }}
-                    style={card}
-                  >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '560px' }}>
+                {sessions.map(sess => (
+                  <div key={sess.id} style={card}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: '0.8125rem', color: t.textSecondary, marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>
                         {sess.user_agent.slice(0, 60)}
                       </p>
-                      <p style={{ fontSize: '0.6875rem', color: t.textMuted, fontFamily: t.fontMono }}>
+                      <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: 'var(--text-muted)' }}>
                         {sess.ip_address} · active {formatDate(sess.last_active)}
                       </p>
                     </div>
-                    <button onClick={() => revokeSession(sess.id)} style={{ ...ghostBtn, color: t.destructive }}>Revoke</button>
-                  </motion.div>
+                    <button onClick={() => revokeSession(sess.id)} style={{ ...ghostBtn, color: '#f87171', flexShrink: 0 }}>
+                      Revoke
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
           )}
         </div>
+      </div>
 
-        {/* ── Mobile bottom nav ─────────────────────────────────────────────── */}
-        <nav
-          className="mobile-bottom-nav"
-          style={{
-            display: 'flex',
-            borderTop: `1px solid ${t.borderGlass}`,
-            background: t.bgGlass,
-            backdropFilter: 'blur(20px)',
-            position: 'sticky',
-            bottom: 0,
-            zIndex: 20,
-            paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-          }}
-        >
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => changeSection(item.id)}
-              style={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 3,
-                padding: '10px 4px',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                color: section === item.id ? t.accent : t.textMuted,
-                fontFamily: t.fontSans,
-                position: 'relative',
-              }}
-              aria-label={item.label}
-            >
-              {section === item.id && (
-                <motion.div
-                  layoutId="bottom-nav-indicator"
-                  style={{
-                    position: 'absolute', top: 0, left: '15%', right: '15%',
-                    height: 2, borderRadius: 1, background: t.accent,
-                  }}
-                  transition={spring}
-                />
-              )}
-              {item.icon}
-              <span style={{ fontSize: 9, fontWeight: section === item.id ? 600 : 400, letterSpacing: '0.02em' }}>
-                {item.shortLabel}
-              </span>
-              {item.id === 'unread' && unreadCount > 0 && (
-                <span style={{
-                  position: 'absolute', top: 6, right: '18%',
-                  background: t.accent, color: t.bg,
-                  borderRadius: 99, fontSize: 8, fontWeight: 700,
-                  padding: '1px 4px', fontFamily: t.fontMono, lineHeight: 1.4,
-                }}>
-                  {unreadCount > 9 ? '9+' : unreadCount}
+      {/* Mobile bottom tab bar */}
+      {isMobile && (
+        <div style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '64px',
+          background: 'rgba(13,13,13,0.92)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          borderTop: '1px solid var(--border)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+          display: 'flex',
+          alignItems: 'stretch',
+          zIndex: 30,
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}>
+          {(['inbox', 'unread', 'archived', 'security', 'devices'] as Section[]).map(id => {
+            const item = navItems.find(n => n.id === id)!
+            const active = section === id || (id === 'devices' && section === 'sessions')
+            return (
+              <button
+                key={id}
+                onClick={() => changeSection(id)}
+                style={{
+                  flex: 1,
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '3px',
+                  color: active ? 'var(--text-primary)' : 'var(--text-muted)',
+                  transition: 'color 0.15s',
+                  position: 'relative',
+                  minHeight: '44px',
+                }}
+              >
+                {id === 'unread' && unreadCount > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '8px',
+                    right: 'calc(50% - 16px)',
+                    background: '#3b82f6',
+                    color: '#fff',
+                    fontSize: '9px',
+                    fontFamily: "'DM Mono', monospace",
+                    fontWeight: 700,
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+                <TabIcon id={id} />
+                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '9px', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                  {item.short}
                 </span>
-              )}
-            </button>
-          ))}
-        </nav>
-      </main>
+              </button>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
 
-// ─── Style objects ────────────────────────────────────────────────────────────
+function TabIcon({ id }: { id: Section }) {
+  const s = { width: 18, height: 18, strokeWidth: 1.5, fill: 'none', stroke: 'currentColor' }
+  if (id === 'inbox') return (
+    <svg viewBox="0 0 24 24" {...s}>
+      <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+  if (id === 'unread') return (
+    <svg viewBox="0 0 24 24" {...s}>
+      <circle cx="18" cy="6" r="3" fill="currentColor" stroke="none"/>
+      <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+  if (id === 'archived') return (
+    <svg viewBox="0 0 24 24" {...s}>
+      <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+  if (id === 'security') return (
+    <svg viewBox="0 0 24 24" {...s}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+  return (
+    <svg viewBox="0 0 24 24" {...s}>
+      <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
 
-const navBtn: React.CSSProperties = {
-  width: '100%',
-  textAlign: 'left',
-  padding: '7px 10px',
-  borderRadius: 7,
-  border: 'none',
-  cursor: 'pointer',
-  fontFamily: "'Fira Sans', system-ui, sans-serif",
-  display: 'flex',
-  alignItems: 'center',
-  gap: 9,
-  transition: 'background 0.15s, color 0.15s, border-color 0.15s',
+function LoadingState() {
+  return (
+    <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)', fontFamily: "'DM Mono', monospace", fontSize: '12px', letterSpacing: '0.06em' }}>
+      Loading…
+    </div>
+  )
+}
+
+function EmptyState({ label }: { label: string }) {
+  return (
+    <div style={{ padding: '4rem 1.5rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+      {label}
+    </div>
+  )
+}
+
+function formatDate(iso: string) {
+  const d = new Date(iso)
+  const diff = Date.now() - d.getTime()
+  if (diff < 60_000) return 'just now'
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`
+  return d.toLocaleDateString()
+}
+
+function riskBg(level: string) {
+  if (level === 'critical') return 'rgba(239,68,68,0.12)'
+  if (level === 'high') return 'rgba(249,115,22,0.12)'
+  if (level === 'medium') return 'rgba(234,179,8,0.1)'
+  return 'rgba(100,100,100,0.1)'
+}
+
+function riskColor(level: string) {
+  if (level === 'critical') return '#f87171'
+  if (level === 'high') return '#fb923c'
+  if (level === 'medium') return '#facc15'
+  return 'var(--text-muted)'
+}
+
+const inputStyle: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid var(--border)',
+  borderRadius: '8px',
+  color: 'var(--text-primary)',
+  outline: 'none',
+  fontFamily: "'Syne', sans-serif",
+  fontSize: '0.9375rem',
 }
 
 const ghostBtn: React.CSSProperties = {
   background: 'none',
   border: 'none',
   cursor: 'pointer',
-  fontSize: '0.75rem',
-  color: '#94a3b8',
-  fontFamily: "'Fira Sans', system-ui, sans-serif",
-  padding: '4px 8px',
-  borderRadius: 5,
+  fontSize: '0.8125rem',
+  color: 'var(--text-secondary)',
+  fontFamily: "'Syne', sans-serif",
+  padding: '8px 10px',
+  borderRadius: '8px',
   transition: 'color 0.15s',
   whiteSpace: 'nowrap',
 }
 
-const actionBtn: React.CSSProperties = {
-  background: 'none',
-  border: '1px solid rgba(71,85,105,0.5)',
-  borderRadius: 6,
-  padding: '5px 12px',
-  fontSize: '0.75rem',
-  color: '#CBD5E1',
-  fontFamily: "'Fira Sans', system-ui, sans-serif",
+const chipBtn: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid var(--border)',
+  borderRadius: '8px',
+  padding: '6px 12px',
+  fontSize: '0.8125rem',
+  color: 'var(--text-secondary)',
+  fontFamily: "'Syne', sans-serif",
   cursor: 'pointer',
   transition: 'border-color 0.15s, color 0.15s',
+  whiteSpace: 'nowrap',
 }
 
-const iconBtn: React.CSSProperties = {
-  background: 'none',
-  border: 'none',
-  cursor: 'pointer',
-  color: '#94a3b8',
-  padding: 6,
-  borderRadius: 6,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  transition: 'color 0.15s',
-}
-
-const searchInput: React.CSSProperties = {
-  background: 'rgba(30,41,59,0.8)',
-  border: '1px solid rgba(71,85,105,0.4)',
-  borderRadius: 7,
-  color: '#F8FAFC',
-  outline: 'none',
-  fontFamily: "'Fira Sans', system-ui, sans-serif",
-  padding: '5px 10px',
-  fontSize: '0.8125rem',
-  width: 180,
-  maxWidth: '40vw',
-}
-
-const fullBtn: React.CSSProperties = {
+const primaryBtn: React.CSSProperties = {
   display: 'block',
   width: '100%',
-  maxWidth: 200,
-  margin: '0 auto',
-  padding: '10px',
-  background: '#22C55E',
-  color: '#0F172A',
+  padding: '12px',
+  background: 'var(--text-primary)',
+  color: 'var(--bg-primary)',
   border: 'none',
-  borderRadius: 8,
-  fontSize: '0.875rem',
+  borderRadius: '10px',
+  fontSize: '0.9375rem',
   fontWeight: 600,
-  fontFamily: "'Fira Sans', system-ui, sans-serif",
+  fontFamily: "'Syne', sans-serif",
   cursor: 'pointer',
+  letterSpacing: '-0.01em',
 }
 
 const card: React.CSSProperties = {
   display: 'flex',
   alignItems: 'center',
-  gap: '0.875rem',
-  padding: '0.875rem 1rem',
-  background: 'rgba(27,35,54,0.8)',
-  border: '1px solid rgba(255,255,255,0.06)',
-  borderRadius: 10,
-  backdropFilter: 'blur(10px)',
+  gap: '1rem',
+  padding: '1rem 1.25rem',
+  background: 'var(--bg-card)',
+  border: '1px solid var(--border)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
+  borderRadius: '12px',
 }
