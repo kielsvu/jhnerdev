@@ -31,6 +31,13 @@ export const projects: LocalProject[] = [
   description: 'A modern password manager with a clean interface and secure vault for storing your accounts. Protect your credentials with PIN authentication and encryption while keeping everything organized and easy to access.',
   technologies: 'Kotlin, Jetpack Compose, Android SDK, Room Database, Android Keystore',
   image_url: '/projects/KeepJ.jpg',
+  },
+  {
+  id: 'younggod',
+  title: 'Young God Worldwide',
+  description: 'A modern community platform with a clean interface for connecting members, showcasing profiles, and building a strong digital identity. Designed with responsive layouts, smooth animations, and an engaging user experience.',
+  technologies: 'Next.js, React, TypeScript, Tailwind CSS, Framer Motion, JavaScript',
+  image_url: '/projects/ygw.jpg',
   }
 ]
 
