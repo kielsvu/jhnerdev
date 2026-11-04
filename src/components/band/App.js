@@ -17,7 +17,7 @@ export default function App() {
   return (
     <Lanyard
       frontImage="/assets/PP.png"
-      backImage="/assets/PP.png"
+      backImage="/assets/PP2.png"
       strapImage="/assets/bandd.png"
       strapColor="#111111"
       finish="glossy"
