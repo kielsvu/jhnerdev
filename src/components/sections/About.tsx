@@ -282,8 +282,8 @@ export default function About() {
                   }}
                 >
                   <Image
-                    src="/assets/PP.png"
-                    alt="AJ"
+                    src="/assets/profile.png"
+                    alt="JT"
                     width={264}
                     height={264}
                     priority
