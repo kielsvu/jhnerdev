@@ -24,8 +24,7 @@ export const projects: LocalProject[] = [
   description: 'A modern music app with a clean Apple Music-inspired interface. Enjoy ad-free listening and download your favorite music for offline playback.',
   technologies: 'Kotlin, Jetpack Compose, Android SDK',
   image_url: '/projects/JhnerMusic.jpg',
-  }
-  
+  },
   {
   id: 'keepj',
   title: 'KeepJ',
