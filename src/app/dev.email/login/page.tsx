@@ -5,8 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 type Step = 'credentials' | 'pin'
 
-// ── Icons ─────────────────────────────────────────────────────────────────────
-
 function IconEye({ s = 16 }: { s?: number }) {
   return (
     <svg width={s} height={s} viewBox="0 0 16 16" fill="none">
@@ -24,7 +22,7 @@ function IconEyeOff({ s = 16 }: { s?: number }) {
   )
 }
 
-function IconCheck({ s = 11, color = '#0a0a0a' }: { s?: number; color?: string }) {
+function IconCheck({ s = 11, color = '#0d0d0d' }: { s?: number; color?: string }) {
   return (
     <svg width={s} height={s} viewBox="0 0 11 11" fill="none">
       <path d="M1.5 5.5 4.5 8.5 9.5 2.5" stroke={color} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -32,27 +30,22 @@ function IconCheck({ s = 11, color = '#0a0a0a' }: { s?: number; color?: string }
   )
 }
 
-// ── Spring configs (Apple guidelines) ─────────────────────────────────────────
-
 const sp = {
   enter:  { type: 'spring' as const, damping: 24, stiffness: 280 },
   tap:    { type: 'spring' as const, damping: 28, stiffness: 400 },
   bounce: { type: 'spring' as const, damping: 18, stiffness: 320 },
-  err:    { type: 'spring' as const, damping: 16, stiffness: 360 },
 }
 
-// ── Tokens ────────────────────────────────────────────────────────────────────
-
-const bg       = '#0a0a0a'
-const card     = '#181818'
-const input    = '#1f1f1f'
-const border   = 'rgba(255,255,255,0.08)'
-const text     = '#ffffff'
-const text2    = 'rgba(255,255,255,0.56)'
-const text3    = 'rgba(255,255,255,0.24)'
-const red      = '#f87171'
-
-// ── Page ─────────────────────────────────────────────────────────────────────
+// Portfolio design tokens — exact match to globals.css
+const bg     = '#0d0d0d'
+const card   = '#1a1a1a'
+const input  = '#141414'
+const border = '#2a2a2a'
+const text   = '#f0f0f0'
+const text2  = '#888888'
+const text3  = '#555555'
+const purple = '#B284FF'
+const red    = '#f87171'
 
 export default function AdminLoginPage() {
   const [step, setStep]               = useState<Step>('credentials')
@@ -137,6 +130,8 @@ export default function AdminLoginPage() {
   return (
     <>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         .jh-input {
@@ -146,12 +141,12 @@ export default function AdminLoginPage() {
           border-radius: 10px;
           color: ${text};
           font-size: 15px;
-          font-family: inherit;
+          font-family: 'Syne', -apple-system, sans-serif;
           outline: none;
           transition: border-color 0.15s;
         }
         .jh-input::placeholder { color: ${text3}; }
-        .jh-input:focus { border-color: rgba(255,255,255,0.26); }
+        .jh-input:focus { border-color: rgba(255,255,255,0.18); }
 
         .jh-pin {
           width: 64px; height: 68px;
@@ -161,12 +156,12 @@ export default function AdminLoginPage() {
           border: 1px solid ${border};
           border-radius: 13px;
           color: ${text};
-          font-family: inherit;
+          font-family: 'Syne', -apple-system, sans-serif;
           outline: none;
           caret-color: ${text};
           transition: border-color 0.15s;
         }
-        .jh-pin:focus { border-color: rgba(255,255,255,0.4); }
+        .jh-pin:focus { border-color: rgba(255,255,255,0.3); }
 
         .jh-eye:hover  { color: rgba(255,255,255,0.7) !important; }
         .jh-back:hover { color: rgba(255,255,255,0.6) !important; }
@@ -184,11 +179,11 @@ export default function AdminLoginPage() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: 24,
-        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
+        fontFamily: "'Syne', -apple-system, sans-serif",
         WebkitFontSmoothing: 'antialiased',
+        fontOpticalSizing: 'auto',
       }}>
 
-        {/* ── Card ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -199,40 +194,50 @@ export default function AdminLoginPage() {
             border: `1px solid ${border}`,
             borderRadius: 18,
             padding: '32px 28px',
+            // Apple top-edge light catch
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07), 0 8px 48px rgba(0,0,0,0.45)',
           }}
         >
           {/* Logo + heading */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 28 }}>
+            {/* JH mark — purple accent matches portfolio BlackHole */}
             <div style={{
               width: 46, height: 46, borderRadius: 12,
-              background: '#242424',
-              border: '1px solid rgba(255,255,255,0.1)',
+              background: `rgba(178,132,255,0.08)`,
+              border: `1px solid rgba(178,132,255,0.22)`,
+              boxShadow: `inset 0 1px 0 rgba(178,132,255,0.15)`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               marginBottom: 22,
-              fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.85)',
-              letterSpacing: '-0.01em',
+              fontSize: 13, fontWeight: 700,
+              color: purple,
+              letterSpacing: '0.04em',
+              fontFamily: "'DM Mono', monospace",
             }}>
               JH
             </div>
 
             <h1 style={{
-              fontSize: 22, fontWeight: 700, color: text,
-              letterSpacing: '-0.022em', marginBottom: 7, textAlign: 'center',
+              fontSize: 22, fontWeight: 800, color: text,
+              letterSpacing: '-0.03em', marginBottom: 7, textAlign: 'center',
               lineHeight: 1.1,
+              fontFamily: "'Syne', -apple-system, sans-serif",
             }}>
               {step === 'credentials' ? 'Sign in' : 'Verify identity'}
             </h1>
-            <p style={{ fontSize: 14, color: text2, textAlign: 'center', lineHeight: 1.45 }}>
+            <p style={{
+              fontSize: 14, color: text2, textAlign: 'center', lineHeight: 1.45,
+              fontFamily: "'DM Mono', monospace",
+              letterSpacing: '0.01em',
+            }}>
               {step === 'credentials'
                 ? 'Continue to the jhner.dev workspace.'
                 : 'Enter your 4-digit PIN to continue.'}
             </p>
           </div>
 
-          {/* ── Steps ── */}
           <AnimatePresence mode="wait">
 
-            {/* ── Credentials ── */}
+            {/* Credentials */}
             {step === 'credentials' && (
               <motion.form
                 key="credentials"
@@ -289,7 +294,6 @@ export default function AdminLoginPage() {
                   </div>
                 </div>
 
-                {/* Trust device checkbox */}
                 <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', marginTop: 2 }}>
                   <motion.div
                     whileTap={{ scale: 0.88 }}
@@ -298,7 +302,7 @@ export default function AdminLoginPage() {
                     style={{
                       width: 18, height: 18, borderRadius: 5, flexShrink: 0,
                       background: trustDevice ? text : 'transparent',
-                      border: `1.5px solid ${trustDevice ? text : 'rgba(255,255,255,0.22)'}`,
+                      border: `1.5px solid ${trustDevice ? text : 'rgba(255,255,255,0.18)'}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       transition: 'background 0.15s, border-color 0.15s',
                     }}
@@ -317,7 +321,10 @@ export default function AdminLoginPage() {
                       )}
                     </AnimatePresence>
                   </motion.div>
-                  <span style={{ fontSize: 13.5, color: text2, userSelect: 'none' }}>
+                  <span style={{
+                    fontSize: 13, color: text2, userSelect: 'none',
+                    fontFamily: "'DM Mono', monospace",
+                  }}>
                     Keep me signed in for 30 days
                   </span>
                 </label>
@@ -333,11 +340,12 @@ export default function AdminLoginPage() {
                   transition={sp.tap}
                   style={{
                     width: '100%', padding: '13px',
-                    background: loading ? 'rgba(255,255,255,0.09)' : text,
-                    color: loading ? 'rgba(255,255,255,0.28)' : bg,
+                    background: loading ? 'rgba(255,255,255,0.07)' : text,
+                    color: loading ? 'rgba(255,255,255,0.25)' : bg,
                     border: 'none', borderRadius: 11,
-                    fontSize: 15, fontWeight: 600,
-                    fontFamily: 'inherit',
+                    fontSize: 15, fontWeight: 700,
+                    fontFamily: "'Syne', -apple-system, sans-serif",
+                    letterSpacing: '-0.01em',
                     cursor: loading ? 'not-allowed' : 'pointer',
                     marginTop: 4,
                     transition: 'background 0.18s, color 0.18s',
@@ -348,7 +356,7 @@ export default function AdminLoginPage() {
               </motion.form>
             )}
 
-            {/* ── PIN ── */}
+            {/* PIN */}
             {step === 'pin' && (
               <motion.form
                 key="pin"
@@ -359,7 +367,6 @@ export default function AdminLoginPage() {
                 onSubmit={handlePin}
                 style={{ display: 'flex', flexDirection: 'column', gap: 22, alignItems: 'center' }}
               >
-                {/* PIN boxes */}
                 <div style={{ display: 'flex', gap: 10 }}>
                   {pin.map((digit, i) => (
                     <motion.div
@@ -379,7 +386,7 @@ export default function AdminLoginPage() {
                         className="jh-pin"
                         style={{
                           borderColor: digit
-                            ? 'rgba(255,255,255,0.38)'
+                            ? `rgba(178,132,255,0.45)`
                             : border,
                         }}
                       />
@@ -399,14 +406,15 @@ export default function AdminLoginPage() {
                   style={{
                     width: '100%', padding: '13px',
                     background: loading || !pinComplete
-                      ? 'rgba(255,255,255,0.09)'
+                      ? 'rgba(255,255,255,0.07)'
                       : text,
                     color: loading || !pinComplete
-                      ? 'rgba(255,255,255,0.28)'
+                      ? 'rgba(255,255,255,0.25)'
                       : bg,
                     border: 'none', borderRadius: 11,
-                    fontSize: 15, fontWeight: 600,
-                    fontFamily: 'inherit',
+                    fontSize: 15, fontWeight: 700,
+                    fontFamily: "'Syne', -apple-system, sans-serif",
+                    letterSpacing: '-0.01em',
                     cursor: loading || !pinComplete ? 'not-allowed' : 'pointer',
                     transition: 'background 0.2s, color 0.2s',
                   }}
@@ -422,8 +430,10 @@ export default function AdminLoginPage() {
                   onClick={() => { setStep('credentials'); setError(''); setPin(['', '', '', '']) }}
                   style={{
                     background: 'none', border: 'none',
-                    color: text3, fontSize: 13.5,
-                    cursor: 'pointer', fontFamily: 'inherit',
+                    color: text3, fontSize: 13,
+                    cursor: 'pointer',
+                    fontFamily: "'DM Mono', monospace",
+                    letterSpacing: '0.01em',
                     transition: 'color 0.13s', marginTop: -8,
                   }}
                 >
@@ -435,22 +445,24 @@ export default function AdminLoginPage() {
           </AnimatePresence>
         </motion.div>
 
-        {/* Footer */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
-          style={{ marginTop: 24, fontSize: 12, color: 'rgba(255,255,255,0.18)', textAlign: 'center' }}
+          transition={{ delay: 0.35, duration: 0.4 }}
+          style={{
+            marginTop: 24, fontSize: 11, color: 'rgba(255,255,255,0.16)',
+            textAlign: 'center',
+            fontFamily: "'DM Mono', monospace",
+            letterSpacing: '0.1em',
+          }}
         >
-          jhner.dev · Admin access only
+          jhner.dev · admin access only
         </motion.p>
 
       </div>
     </>
   )
 }
-
-// ── Error message ─────────────────────────────────────────────────────────────
 
 function ErrorMsg({ message }: { message: string }) {
   return (
@@ -462,9 +474,10 @@ function ErrorMsg({ message }: { message: string }) {
       style={{
         width: '100%', fontSize: 13, color: red,
         padding: '10px 14px', textAlign: 'center',
-        background: 'rgba(248,113,113,0.08)',
-        border: '1px solid rgba(248,113,113,0.16)',
+        background: 'rgba(248,113,113,0.07)',
+        border: '1px solid rgba(248,113,113,0.14)',
         borderRadius: 9, lineHeight: 1.45,
+        fontFamily: "'DM Mono', monospace",
       }}
     >
       {message}
@@ -472,11 +485,11 @@ function ErrorMsg({ message }: { message: string }) {
   )
 }
 
-// ── Shared styles ─────────────────────────────────────────────────────────────
-
 const labelStyle: React.CSSProperties = {
-  fontSize: 13.5,
+  fontSize: 12,
   fontWeight: 500,
-  color: 'rgba(255,255,255,0.62)',
-  letterSpacing: '-0.003em',
+  color: '#888888',
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase',
+  fontFamily: "'DM Mono', monospace",
 }
