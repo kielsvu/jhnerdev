@@ -157,6 +157,7 @@ function FeedCard({
         display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
         overflow: 'hidden',
         fontFamily: "'Syne', -apple-system, sans-serif",
+        fontOpticalSizing: 'auto',
       }}>
         {description}
       </p>
@@ -202,6 +203,7 @@ function BottomNav({ items, active, onSelect }: {
         background: T.nav,
         borderRadius: 22,
         border: `1px solid ${T.border}`,
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07)',
         pointerEvents: 'auto',
       }}>
         {items.map(item => {
@@ -436,6 +438,7 @@ export default function Dashboard() {
         minHeight: '100vh', background: T.bg,
         display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
         fontFamily: "'Syne', -apple-system, sans-serif",
+        fontOpticalSizing: 'auto',
       }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -514,6 +517,7 @@ export default function Dashboard() {
         minHeight: '100vh', background: T.bg,
         fontFamily: "'Syne', -apple-system, sans-serif",
         paddingBottom: 100,
+        fontOpticalSizing: 'auto',
         WebkitFontSmoothing: 'antialiased',
       }}>
 
@@ -633,9 +637,11 @@ export default function Dashboard() {
                 border: `1px solid ${T.border}`,
                 cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 11, fontWeight: 700, color: T.text2,
+                fontSize: 11, fontWeight: 700, color: '#B284FF',
                 fontFamily: "'DM Mono', monospace",
-                letterSpacing: '0.02em',
+                letterSpacing: '0.04em',
+                background: 'rgba(178,132,255,0.08)',
+                border: '1px solid rgba(178,132,255,0.2)',
               }}>
               JH
             </motion.button>
