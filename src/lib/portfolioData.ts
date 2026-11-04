@@ -17,7 +17,23 @@ export type LocalTechStack = {
   logo_key: string
 }
 
-export const projects: LocalProject[] = []
+export const projects: LocalProject[] = [
+  {
+  id: 'jhnermusic',
+  title: 'JhnerMusic',
+  description: 'A modern music app with a clean Apple Music-inspired interface. Enjoy ad-free listening and download your favorite music for offline playback.',
+  technologies: 'Kotlin, Jetpack Compose, Android SDK',
+  image_url: '/projects/JhnerMusic.jpg',
+  }
+  
+  {
+  id: 'keepj',
+  title: 'KeepJ',
+  description: 'A modern password manager with a clean interface and secure vault for storing your accounts. Protect your credentials with PIN authentication and encryption while keeping everything organized and easy to access.',
+  technologies: 'Kotlin, Jetpack Compose, Android SDK, Room Database, Android Keystore',
+  image_url: '/projects/KeepJ.jpg',
+  }
+]
 
 
 export const techStacks: LocalTechStack[] = [
