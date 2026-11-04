@@ -633,15 +633,13 @@ export default function Dashboard() {
               onClick={() => { setShowLogout(v => !v); setShowSearch(false) }}
               style={{
                 width: 34, height: 34, borderRadius: '50%',
-                background: T.card,
-                border: `1px solid ${T.border}`,
+                background: 'rgba(178,132,255,0.08)',
+                border: '1px solid rgba(178,132,255,0.2)',
                 cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 11, fontWeight: 700, color: '#B284FF',
                 fontFamily: "'DM Mono', monospace",
                 letterSpacing: '0.04em',
-                background: 'rgba(178,132,255,0.08)',
-                border: '1px solid rgba(178,132,255,0.2)',
               }}>
               JH
             </motion.button>
