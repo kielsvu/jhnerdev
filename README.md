@@ -2,7 +2,7 @@
 
 A personal portfolio showcasing my projects, skills, and work as a developer.
 
-**Website:** [jhner.dev](https://jhner.dev)
+**Website:** [jhner.dev](https://jhner.is-a.dev)
 
 ---
 
@@ -98,7 +98,7 @@ Third-party libraries, fonts, and other resources remain subject to their respec
 For inquiries, collaborations, or other questions:
 
 - **Email:** [hello@jhner.dev](mailto:hello@jhner.dev)
-- **Website:** [jhner.dev](https://jhner.dev)
+- **Website:** [jhner.dev](https://jhner.is-a.dev)
 
 ---
 
