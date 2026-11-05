@@ -6,7 +6,7 @@ Each component remains the property of its original owner and is subject to its 
 
 Software Dependencies
 
-The following packages are direct dependencies used in the project.
+The following packages are direct dependencies used by the project.
 
 Runtime Dependencies
 
@@ -34,7 +34,7 @@ Package| License
 "tailwindcss" (https://github.com/tailwindlabs/tailwindcss)| MIT
 "typescript" (https://github.com/microsoft/TypeScript)| Apache-2.0
 
-This list covers direct dependencies and may not include transitive dependencies installed by the package manager.
+This list covers direct dependencies and may not include transitive packages installed by the package manager.
 
 For complete licensing information, refer to the license files distributed with each package.
 
@@ -45,12 +45,12 @@ The website uses the following typefaces:
 Syne
 
 - License: SIL Open Font License 1.1
-- Source: "Google Fonts" (https://fonts.google.com/specimen/Syne)
+- Source: "Google Fonts - Syne" (https://fonts.google.com/specimen/Syne)
 
 DM Mono
 
 - License: SIL Open Font License 1.1
-- Source: "Google Fonts" (https://fonts.google.com/specimen/DM+Mono)
+- Source: "Google Fonts - DM Mono" (https://fonts.google.com/specimen/DM+Mono)
 
 Both typefaces are distributed under the SIL Open Font License 1.1. Their inclusion in this project does not transfer ownership or authorship to Jhner Torres.
 
@@ -75,5 +75,3 @@ Nothing in this notice grants additional rights beyond those provided by the ori
 Updates
 
 This notice may be revised as project dependencies, fonts, and other third-party resources change.
-
-The project maintainer is responsible for keeping this document reasonably accurate as the project evolves.
