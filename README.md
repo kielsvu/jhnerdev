@@ -1,45 +1,47 @@
 Jhner.dev
 
-Personal portfolio of Jhner Torres.
+A personal portfolio showcasing my projects, skills, and work as a developer.
 
-A collection of selected projects, development work, technical interests, and the technologies I use to build digital experiences.
+Website: "jhner.dev" (https://jhner.dev)
 
-Jhner.dev brings together a minimal visual design, interactive elements, and smooth animations to showcase my work as a developer.
+---
+
+About
+
+Jhner.dev is my personal developer portfolio. It serves as a place to showcase selected projects, share the technologies I work with, and provide a way for people to get in touch.
+
+The website features a modern interface with interactive elements, animations, and a private dashboard for managing contact submissions.
 
 Features
 
-- Personal Portfolio - An overview of my background, interests, and development experience.
-- Project Showcase - A collection of selected projects with descriptions, technologies, and relevant links.
-- Tech Stack - A look at the programming languages, frameworks, and tools I work with.
-- Interactive Design - Smooth transitions, animations, and interactive visual elements.
-- Responsive Layout - Designed to work across desktop and mobile devices.
-- Contact Form - A way to reach out for inquiries, opportunities, and collaborations.
-- Admin Dashboard - A private interface for managing incoming messages and security-related records.
+- Personal Portfolio — A collection of projects and development work.
+- Project Showcase — Dedicated sections highlighting project details and technologies.
+- Interactive Interface — Smooth animations and responsive layouts.
+- Contact Form — A way for visitors to send inquiries.
+- Private Admin Dashboard — A protected area for managing submitted messages.
+- Responsive Design — Designed to work across desktop and mobile devices.
 
-Built With
-
-Frontend
+Tech Stack
 
 Technology| Purpose
-"Next.js" (https://nextjs.org/)| Application framework
+"Next.js" (https://nextjs.org/)| React framework
 "React" (https://react.dev/)| User interface
-"TypeScript" (https://www.typescriptlang.org/)| Application development
+"TypeScript" (https://www.typescriptlang.org/)| Type safety
 "Tailwind CSS" (https://tailwindcss.com/)| Styling
-"Framer Motion" (https://motion.dev/)| Animations and transitions
-"Three.js" (https://threejs.org/)| 3D and visual effects
+"Framer Motion" (https://motion.dev/)| Animations
+"Three.js" (https://threejs.org/)| 3D graphics
 "Lucide React" (https://lucide.dev/)| Icons
+"Supabase" (https://supabase.com/)| Backend services and database
+"PostgreSQL" (https://www.postgresql.org/)| Relational database
 
-Backend and Services
+Typography
 
-Technology| Purpose
-"Supabase" (https://supabase.com/)| Database and authentication
-"PostgreSQL" (https://www.postgresql.org/)| Database management
+The website uses the following typefaces:
 
-Fonts
+- "Syne" (https://fonts.google.com/specimen/Syne)
+- "DM Mono" (https://fonts.google.com/specimen/DM+Mono)
 
-Typeface| Source
-"Syne" (https://fonts.google.com/specimen/Syne)| Google Fonts
-"DM Mono" (https://fonts.google.com/specimen/DM+Mono)| Google Fonts
+Both fonts are distributed under the SIL Open Font License.
 
 Project Structure
 
@@ -47,16 +49,13 @@ jhnerdev/
 ├── public/
 │   ├── assets/
 │   └── projects/
-│
 ├── src/
 │   ├── app/
 │   ├── components/
 │   ├── hooks/
 │   └── lib/
-│
 ├── supabase/
 │   └── migration.sql
-│
 ├── LICENSE
 ├── THIRD-PARTY-NOTICES.md
 ├── package.json
@@ -64,20 +63,20 @@ jhnerdev/
 
 License
 
-The original source code, website design, written content, and other materials created specifically for Jhner.dev are protected under a proprietary license.
+The original source code, design, written content, and branding created specifically for Jhner.dev are protected under a proprietary license.
 
-All rights reserved. Reproduction, redistribution, modification, or commercial use of original materials requires prior written permission.
+All rights reserved. Copying, redistribution, modification, or commercial use of these materials requires prior written permission.
 
-See "LICENSE" (./LICENSE) for the complete licensing terms.
+See "LICENSE" (./LICENSE) for the complete terms.
 
-Third-party software and resources remain subject to their respective licenses. See "THIRD-PARTY-NOTICES.md" (./THIRD-PARTY-NOTICES.md) for additional information.
+Third-party libraries, fonts, and other resources remain subject to their respective licenses. See "THIRD-PARTY-NOTICES.md" (./THIRD-PARTY-NOTICES.md) for details.
 
 Contact
 
 For inquiries, collaborations, or other questions:
 
 - Email: "hello@jhner.dev" (mailto:hello@jhner.dev)
-- Website: "jhner.dev" (https://jhner.is-a.dev/)
+- Website: "jhner.dev" (https://jhner.dev)
 
 ---
 
