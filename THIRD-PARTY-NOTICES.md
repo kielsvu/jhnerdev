@@ -1,44 +1,77 @@
 Third-Party Notices
 
-This portfolio uses third-party software packages. The All Rights Reserved notice in "LICENSE" applies only to original material owned by the portfolio's copyright holder; it does not replace or override the licenses of these dependencies.
+Jhner.dev uses third-party software, libraries, fonts, and other resources developed and maintained by their respective authors.
+
+These components remain the property of their original copyright holders and are subject to their respective licenses.
+
+The proprietary license of this project does not override or restrict permissions granted by third-party licenses.
+
+Software Dependencies
+
+The following are direct dependencies used by the project.
 
 Runtime Dependencies
 
-The project uses the following runtime packages, as listed in "package.json":
-
-- "next" — MIT License
-- "react" — MIT License
-- "react-dom" — MIT License
-- "framer-motion" — MIT License
-- "lucide-react" — ISC License
-- "three" — MIT License
-- "@react-three/fiber" — MIT License
-- "@react-three/drei" — MIT License
-- "@react-three/rapier" — MIT License
-- "meshline" — MIT License
+Package| License
+@supabase/ssr| MIT
+@supabase/supabase-js| MIT
+framer-motion| MIT
+lucide-react| ISC
+next| MIT
+react| MIT
+react-dom| MIT
+three| MIT
 
 Development Dependencies
 
-- "typescript" — Apache License 2.0
-- "eslint" — MIT License
-- "eslint-config-next" — MIT License
-- "tailwindcss" — MIT License
-- "postcss" — MIT License
-- "autoprefixer" — MIT License
-- "@types/node" — MIT License
-- "@types/react" — MIT License
-- "@types/react-dom" — MIT License
+Package| License
+@types/node| MIT
+@types/react| MIT
+@types/react-dom| MIT
+@types/three| MIT
+autoprefixer| MIT
+eslint| MIT
+eslint-config-next| MIT
+postcss| MIT
+tailwindcss| MIT
+typescript| Apache-2.0
 
-This list is provided for identification and attribution. Verify the applicable license files for the exact package versions used in your deployment. The project archive does not include a lockfile, so exact installed versions and all transitive dependency licenses have not been verified.
+This list covers direct dependencies and does not necessarily include all transitive packages installed by the package manager.
 
-Images, 3D Models, Icons, and Other Assets
+Each dependency remains subject to its original license and copyright notices.
 
-The project contains assets such as "public/assets/PP.png", "public/assets/bandd.png", "public/assets/kartu.glb", and SVG files under "public/".
+Fonts
 
-The inclusion of an asset in this project does not establish its authorship or ownership. Verify the origin and permissions of each asset before redistributing or reusing it. Preserve any required creator credits, attribution notices, license texts, and usage conditions.
+The website uses the following typefaces:
 
-This notice does not replace asset-specific licenses or grant rights to materials owned by third parties.
+Syne
 
-License Scope
+License: SIL Open Font License 1.1
 
-The "LICENSE" file applies to original materials owned by the portfolio copyright holder. Third-party dependencies and assets remain subject to their respective licenses and terms. Where a third-party license grants rights to use, modify, or redistribute its materials, those rights remain governed by that license.
+DM Mono
+
+License: SIL Open Font License 1.1
+
+Both typefaces are distributed under their respective font licenses. Their inclusion does not transfer ownership to Jhner Torres.
+
+Images and Visual Assets
+
+Images, illustrations, icons, screenshots, SVG files, and other visual resources may have separate copyright and licensing requirements.
+
+Ownership remains with the respective creators or copyright holders unless otherwise stated.
+
+The inclusion of an asset in this repository does not automatically grant permission to redistribute, modify, or commercially use it.
+
+Anyone wishing to reuse these materials should verify the original source and applicable license.
+
+License Compliance
+
+Third-party components may be used, modified, and redistributed according to the permissions and conditions of their respective licenses.
+
+Where attribution, copyright notices, or license copies are required, those requirements must be preserved.
+
+For complete licensing information, refer to the original package repositories and their distributed license files.
+
+Updates
+
+This notice may be updated whenever third-party dependencies, fonts, or other resources are added, removed, or replaced.
