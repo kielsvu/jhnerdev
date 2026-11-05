@@ -26,7 +26,7 @@ This project may contain third-party software, libraries, fonts, icons, images, 
 
 These materials are not covered by this proprietary license. They remain the property of their respective authors and copyright holders and are governed by their own licenses and terms.
 
-Additional information can be found in "THIRD-PARTY-NOTICES.md" (THIRD-PARTY-NOTICES.md).
+Additional information can be found in [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md).
 
 Permission Requests
 
