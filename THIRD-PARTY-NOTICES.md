@@ -1,44 +1,42 @@
 Third-Party Notices
 
-Jhner.dev uses third-party software, libraries, fonts, and other resources developed and maintained by their respective authors.
+Jhner.dev uses third-party software, libraries, fonts, and other resources maintained by their respective developers and copyright holders.
 
-These components remain the property of their original copyright holders and are subject to their respective licenses.
-
-The proprietary license of this project does not override or restrict permissions granted by third-party licenses.
+Each component remains the property of its original owner and is subject to its respective license. The proprietary license of this project does not override or replace the terms of any third-party license.
 
 Software Dependencies
 
-The following are direct dependencies used by the project.
+The following packages are direct dependencies used in the project.
 
 Runtime Dependencies
 
 Package| License
-@supabase/ssr| MIT
-@supabase/supabase-js| MIT
-framer-motion| MIT
-lucide-react| ISC
-next| MIT
-react| MIT
-react-dom| MIT
-three| MIT
+"@supabase/ssr" (https://github.com/supabase/ssr)| MIT
+"@supabase/supabase-js" (https://github.com/supabase/supabase-js)| MIT
+"framer-motion" (https://github.com/motiondivision/motion)| MIT
+"lucide-react" (https://github.com/lucide-icons/lucide)| ISC
+"next" (https://github.com/vercel/next.js)| MIT
+"react" (https://github.com/facebook/react)| MIT
+"react-dom" (https://github.com/facebook/react)| MIT
+"three" (https://github.com/mrdoob/three.js)| MIT
 
 Development Dependencies
 
 Package| License
-@types/node| MIT
-@types/react| MIT
-@types/react-dom| MIT
-@types/three| MIT
-autoprefixer| MIT
-eslint| MIT
-eslint-config-next| MIT
-postcss| MIT
-tailwindcss| MIT
-typescript| Apache-2.0
+"@types/node" (https://github.com/DefinitelyTyped/DefinitelyTyped)| MIT
+"@types/react" (https://github.com/DefinitelyTyped/DefinitelyTyped)| MIT
+"@types/react-dom" (https://github.com/DefinitelyTyped/DefinitelyTyped)| MIT
+"@types/three" (https://github.com/DefinitelyTyped/DefinitelyTyped)| MIT
+"autoprefixer" (https://github.com/postcss/autoprefixer)| MIT
+"eslint" (https://github.com/eslint/eslint)| MIT
+"eslint-config-next" (https://github.com/vercel/next.js)| MIT
+"postcss" (https://github.com/postcss/postcss)| MIT
+"tailwindcss" (https://github.com/tailwindlabs/tailwindcss)| MIT
+"typescript" (https://github.com/microsoft/TypeScript)| Apache-2.0
 
-This list covers direct dependencies and does not necessarily include all transitive packages installed by the package manager.
+This list covers direct dependencies and may not include transitive dependencies installed by the package manager.
 
-Each dependency remains subject to its original license and copyright notices.
+For complete licensing information, refer to the license files distributed with each package.
 
 Fonts
 
@@ -46,32 +44,36 @@ The website uses the following typefaces:
 
 Syne
 
-License: SIL Open Font License 1.1
+- License: SIL Open Font License 1.1
+- Source: "Google Fonts" (https://fonts.google.com/specimen/Syne)
 
 DM Mono
 
-License: SIL Open Font License 1.1
+- License: SIL Open Font License 1.1
+- Source: "Google Fonts" (https://fonts.google.com/specimen/DM+Mono)
 
-Both typefaces are distributed under their respective font licenses. Their inclusion does not transfer ownership to Jhner Torres.
+Both typefaces are distributed under the SIL Open Font License 1.1. Their inclusion in this project does not transfer ownership or authorship to Jhner Torres.
 
-Images and Visual Assets
+Images and Other Visual Assets
 
-Images, illustrations, icons, screenshots, SVG files, and other visual resources may have separate copyright and licensing requirements.
+The project may include photographs, illustrations, icons, screenshots, SVG files, and other visual resources.
 
-Ownership remains with the respective creators or copyright holders unless otherwise stated.
+These materials may be subject to separate copyright and licensing requirements. Ownership remains with their respective creators or copyright holders unless otherwise stated.
 
-The inclusion of an asset in this repository does not automatically grant permission to redistribute, modify, or commercially use it.
+The inclusion of an asset in this repository does not automatically grant permission to reproduce, redistribute, modify, or use it commercially.
 
-Anyone wishing to reuse these materials should verify the original source and applicable license.
+Anyone wishing to reuse these materials should verify their original source and obtain any necessary permissions.
 
 License Compliance
 
 Third-party components may be used, modified, and redistributed according to the permissions and conditions of their respective licenses.
 
-Where attribution, copyright notices, or license copies are required, those requirements must be preserved.
+Any required copyright notices, license copies, and attribution statements must be preserved when using or redistributing those components.
 
-For complete licensing information, refer to the original package repositories and their distributed license files.
+Nothing in this notice grants additional rights beyond those provided by the original licenses.
 
 Updates
 
-This notice may be updated whenever third-party dependencies, fonts, or other resources are added, removed, or replaced.
+This notice may be revised as project dependencies, fonts, and other third-party resources change.
+
+The project maintainer is responsible for keeping this document reasonably accurate as the project evolves.
