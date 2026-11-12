@@ -38,7 +38,7 @@ export const projects: LocalProject[] = [
   description: 'A modern community platform with a clean interface for connecting members, showcasing profiles, and building a strong digital identity. Designed with responsive layouts, smooth animations, and an engaging user experience.',
   technologies: 'Next.js, React, TypeScript, Tailwind CSS, Framer Motion, JavaScript',
   image_url: '/projects/ygw.jpg',
-  }
+  },
   {
   id: 'Nexora',
   title: 'Nexora Hub',
