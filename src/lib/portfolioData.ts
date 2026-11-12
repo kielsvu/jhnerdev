@@ -39,6 +39,13 @@ export const projects: LocalProject[] = [
   technologies: 'Next.js, React, TypeScript, Tailwind CSS, Framer Motion, JavaScript',
   image_url: '/projects/ygw.jpg',
   }
+  {
+  id: 'Nexora',
+  title: 'Nexora Hub',
+  description: 'NexoraHub is a Roblox hub with features like Aimbot, ESP and Camera controls. It comes with a clean dark interface with pink accents and easy-to-use settings for customizing the gameplay experience.',
+  technologies: 'Lua, Luau',
+  image_url: '/projects/NexoraHub.jpg',
+  }
 ]
 
 
