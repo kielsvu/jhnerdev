@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { projects } from '@/lib/portfolioData'
@@ -119,7 +119,11 @@ export default function PortfolioDetailPage() {
                 ease: [0.22, 1, 0.36, 1],
               }}
               src={galleryImages[currentImage]}
-              className="max-w-[85vw] max-h-[80vh] rounded-3xl object-contain"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
+              className="max-w-[85vw] max-h-[80vh] rounded-3xl object-contain select-none"
+              style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' } as React.CSSProperties}
             />
 
             {currentImage < galleryImages.length - 1 && (
@@ -372,7 +376,11 @@ export default function PortfolioDetailPage() {
                     }}
                     src={galleryImages[currentImage]}
                     onClick={() => setPreviewOpen(true)}
-                    className="w-full h-[220px] md:h-[250px] object-cover cursor-pointer"
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
+                    className="w-full h-[220px] md:h-[250px] object-cover cursor-pointer select-none"
+                    style={{ userSelect: 'none', WebkitUserSelect: 'none' } as React.CSSProperties}
                   />
 
                   {currentImage > 0 && (
