@@ -10,7 +10,6 @@ export type LocalProject = {
   key_features?: string
 }
 
-
 export type LocalTechStack = {
   id: string
   name: string
@@ -19,35 +18,34 @@ export type LocalTechStack = {
 
 export const projects: LocalProject[] = [
   {
-  id: 'jhnermusic',
-  title: 'JhnerMusic',
-  description: 'A modern music app with a clean Apple Music-inspired interface. Enjoy ad-free listening and download your favorite music for offline playback.',
-  technologies: 'Kotlin, Jetpack Compose, Android SDK',
-  image_url: '/projects/JhnerMusic.jpg',
+    id: 'jhnermusic',
+    title: 'JhnerMusic',
+    description: 'A modern music app with a clean Apple Music-inspired interface. Enjoy ad-free listening and download your favorite music for offline playback.',
+    technologies: 'Kotlin, Jetpack Compose, Android SDK',
+    image_url: '/projects/JhnerMusic.jpg',
   },
   {
-  id: 'keepj',
-  title: 'KeepJ',
-  description: 'A modern password manager with a clean interface and secure vault for storing your accounts. Protect your credentials with PIN authentication and encryption while keeping everything organized and easy to access.',
-  technologies: 'Kotlin, Jetpack Compose, Android SDK, Room Database, Android Keystore',
-  image_url: '/projects/KeepJ.jpg',
+    id: 'keepj',
+    title: 'KeepJ',
+    description: 'A modern password manager with a clean interface and secure vault for storing your accounts. Protect your credentials with PIN authentication and encryption while keeping everything organized and easy to access.',
+    technologies: 'Kotlin, Jetpack Compose, Android SDK, Room Database, Android Keystore',
+    image_url: '/projects/KeepJ.jpg',
   },
   {
-  id: 'younggod',
-  title: 'Young God Worldwide',
-  description: 'A modern community platform with a clean interface for connecting members, showcasing profiles, and building a strong digital identity. Designed with responsive layouts, smooth animations, and an engaging user experience.',
-  technologies: 'Next.js, React, TypeScript, Tailwind CSS, Framer Motion, JavaScript',
-  image_url: '/projects/ygw.jpg',
+    id: 'younggod',
+    title: 'Young God Worldwide',
+    description: 'A modern community platform with a clean interface for connecting members, showcasing profiles, and building a strong digital identity. Designed with responsive layouts, smooth animations, and an engaging user experience.',
+    technologies: 'Next.js, React, TypeScript, Tailwind CSS, Framer Motion, JavaScript',
+    image_url: '/projects/ygw.jpg',
   },
   {
-  id: 'Nexora',
-  title: 'Nexora Hub',
-  description: 'NexoraHub is a Roblox hub with features like Aimbot, ESP and Camera controls. It comes with a clean dark interface with pink accents and easy-to-use settings for customizing the gameplay experience.',
-  technologies: 'Lua, Luau',
-  image_url: '/projects/NexoraHub.jpg',
-  }
+    id: 'Nexora',
+    title: 'Nexora Hub',
+    description: 'NexoraHub is a Roblox hub with features like Aimbot, ESP and Camera controls. It comes with a clean dark interface with pink accents and easy-to-use settings for customizing the gameplay experience.',
+    technologies: 'Lua, Luau',
+    image_url: '/projects/NexoraHub.jpg',
+  },
 ]
-
 
 export const techStacks: LocalTechStack[] = [
   { id: 'react', name: 'React', logo_key: 'react' },
@@ -72,4 +70,8 @@ export const techStacks: LocalTechStack[] = [
   { id: 'java', name: 'Java', logo_key: 'java' },
   { id: 'kotlin', name: 'Kotlin', logo_key: 'kotlin' },
   { id: 'assembly', name: 'Assembly', logo_key: 'assembly' },
+  { id: 'rust', name: 'Rust', logo_key: 'rust' },
+  { id: 'bash', name: 'Bash', logo_key: 'bash' },
+  { id: 'plsql', name: 'PL/SQL', logo_key: 'pl/sql' },
+  { id: 'tsql', name: 'T-SQL', logo_key: 't-sql' },
 ]
