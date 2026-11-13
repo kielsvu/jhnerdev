@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
 import { Code, Globe, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import { projects, techStacks } from "@/lib/portfolioData";
 
 
 const container: Variants = {
@@ -70,7 +71,6 @@ export default function About() {
     };
   }, []);
 
-  const projectCount = 1
   const scrollToPortfolio = () => {
     const el = document.getElementById("portfolio");
     if (el) {
@@ -83,17 +83,17 @@ export default function About() {
   const stats = [
     {
       icon: <Code size={16} />,
-      value: String(projectCount),
+      value: String(projects.length),
       title: "PROJECTS",
     },
     {
       icon: <Code size={16} />,
-      value: "23",
+      value: String(techStacks.length),
       title: "TECH STACK",
     },
     {
       icon: <Globe size={16} />,
-      value: String(projectCount + 8),
+      value: String(projects.length + 8),
       title: "COMPLETED WORKS",
     },
   ];
