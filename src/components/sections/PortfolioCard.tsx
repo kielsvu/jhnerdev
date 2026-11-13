@@ -31,13 +31,30 @@ export default function PortfolioCard({ title, description, id, image, live_url,
     >
       <div className="w-full h-36 rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] mb-3">
         {image ? (
-          <img
-            src={image}
-            alt={`${title} preview`}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-          />
+          <div
+            onContextMenu={(e) => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
+            onSelect={(e) => e.preventDefault()}
+            style={{
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+              WebkitTouchCallout: 'none' as any,
+              touchAction: 'none',
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <img
+              src={image}
+              alt={`${title} preview`}
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
+              className="w-full h-full object-cover group-hover:scale-105 transition duration-500 select-none"
+            />
+          </div>
         ) : (
           <div className="w-full h-full bg-white/[0.03]" />
         )}
