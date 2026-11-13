@@ -119,13 +119,10 @@ function PhpIcon(p: SVGProps<SVGSVGElement>) {
 }
 
 function PythonIcon(p: SVGProps<SVGSVGElement>) {
-  // Python logo: two interlocked P-shaped snakes with eye dots
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
-      {/* Top snake — head faces right */}
       <path d="M12 2c-2.8 0-5 .9-5 3.2V8h5v1H5.8C3.2 9 2 10.4 2 13c0 2.5 1.2 4 3.8 4H7v-2.2C7 12.6 8.2 12 10 12h4c2 0 3-1.1 3-3.2V5.2C17 2.9 14.8 2 12 2z"/>
       <circle cx="9.8" cy="5.2" r="1.1" fill="var(--tech-icon-bg,#080808)"/>
-      {/* Bottom snake — head faces left */}
       <path d="M12 22c2.8 0 5-.9 5-3.2V16h-5v-1h6.2c2.6 0 3.8-1.4 3.8-4 0-2.5-1.2-4-3.8-4H17v2.2c0 2.2-1.2 2.8-3 2.8h-4c-2 0-3 1.1-3 3.2v3.6C7 21.1 9.2 22 12 22z"/>
       <circle cx="14.2" cy="18.8" r="1.1" fill="var(--tech-icon-bg,#080808)"/>
     </svg>
@@ -135,7 +132,6 @@ function PythonIcon(p: SVGProps<SVGSVGElement>) {
 function JavaIcon(p: SVGProps<SVGSVGElement>) { return <LetterIcon letter="JAVA" {...p}/> }
 
 function KotlinIcon(p: SVGProps<SVGSVGElement>) {
-  // Kotlin mark: solid angular K geometry with the lower section fully closed.
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
       <path d="M1.3 24 12.6 12.5 24 24H1.3ZM0 0h12L0 12.5V0ZM13.4 0 0 14v10l12-12L24 0H13.4Z"/>
@@ -144,12 +140,52 @@ function KotlinIcon(p: SVGProps<SVGSVGElement>) {
 }
 
 function AssemblyIcon(p: SVGProps<SVGSVGElement>) {
-  return <svg viewBox="0 0 24 24" fill="none" {...p}>
-    <path d="M7 4.5h10M5.5 7v10M18.5 7v10M7 19.5h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-    <path d="M7 7h10v10H7z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-    <path d="M9 10h6M9 12h6M9 14h4.2" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
-    <path d="M4 8v2M4 14v2M20 8v2M20 14v2M8 4v-1M12 4v-1M16 4v-1M8 20v1M12 20v1M16 20v1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-  </svg>
+  return (
+    <svg viewBox="0 0 24 24" fill="none" {...p}>
+      <path d="M7 4.5h10M5.5 7v10M18.5 7v10M7 19.5h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+      <path d="M7 7h10v10H7z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M9 10h6M9 12h6M9 14h4.2" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
+      <path d="M4 8v2M4 14v2M20 8v2M20 14v2M8 4v-1M12 4v-1M16 4v-1M8 20v1M12 20v1M16 20v1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function RustIcon(p: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+      <path d="M13.23 2.28a1.26 1.26 0 0 0-2.46 0l-.38 1.56a8.5 8.5 0 0 0-2.4 1l-1.37-.8a1.26 1.26 0 0 0-1.74.46L3.65 6.63a1.26 1.26 0 0 0 .46 1.72l1.36.8A8.68 8.68 0 0 0 5.37 12a8.68 8.68 0 0 0 .1 1.85l-1.36.8a1.26 1.26 0 0 0-.46 1.72l1.23 2.13c.35.6 1.12.8 1.74.46l1.37-.8c.74.4 1.55.72 2.4 1l.38 1.56a1.26 1.26 0 0 0 2.46 0l.38-1.56a8.5 8.5 0 0 0 2.4-1l1.37.8a1.26 1.26 0 0 0 1.74-.46l1.23-2.13a1.26 1.26 0 0 0-.46-1.72l-1.36-.8a8.68 8.68 0 0 0 .1-1.85 8.68 8.68 0 0 0-.1-1.85l1.36-.8a1.26 1.26 0 0 0 .46-1.72l-1.23-2.13a1.26 1.26 0 0 0-1.74-.46l-1.37.8a8.5 8.5 0 0 0-2.4-1l-.38-1.56zM12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zm0 1.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+    </svg>
+  )
+}
+
+function BashIcon(p: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...p}>
+      <rect x="2" y="4" width="20" height="16" rx="2.5" strokeWidth="1.4"/>
+      <path d="M6 9l3.5 3L6 15" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M13 15h5" strokeWidth="1.4" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+function PlSqlIcon(p: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" {...p}>
+      <rect x="3" y="3" width="18" height="18" rx="3" fill="currentColor"/>
+      <text x="12" y="11.5" textAnchor="middle" fontSize="6" fontWeight="800" fontFamily="Arial,sans-serif" fill="var(--tech-icon-bg,#080808)">PL</text>
+      <text x="12" y="17.5" textAnchor="middle" fontSize="5.5" fontWeight="800" fontFamily="Arial,sans-serif" fill="var(--tech-icon-bg,#080808)">SQL</text>
+    </svg>
+  )
+}
+
+function TSqlIcon(p: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" {...p}>
+      <rect x="3" y="3" width="18" height="18" rx="3" fill="currentColor"/>
+      <text x="12" y="11.5" textAnchor="middle" fontSize="6.5" fontWeight="800" fontFamily="Arial,sans-serif" fill="var(--tech-icon-bg,#080808)">T</text>
+      <text x="12" y="17.5" textAnchor="middle" fontSize="5.5" fontWeight="800" fontFamily="Arial,sans-serif" fill="var(--tech-icon-bg,#080808)">SQL</text>
+    </svg>
+  )
 }
 
 export default function TechStackIcon({ name, ...props }: Props) {
@@ -176,5 +212,9 @@ export default function TechStackIcon({ name, ...props }: Props) {
   if (key === 'java') return <JavaIcon {...props} />
   if (key === 'kotlin') return <KotlinIcon {...props} />
   if (key === 'assembly' || key === 'asm') return <AssemblyIcon {...props} />
+  if (key === 'rust') return <RustIcon {...props} />
+  if (key === 'bash' || key === 'shell') return <BashIcon {...props} />
+  if (key === 'pl/sql' || key === 'plsql') return <PlSqlIcon {...props} />
+  if (key === 't-sql' || key === 'tsql') return <TSqlIcon {...props} />
   return null
 }
