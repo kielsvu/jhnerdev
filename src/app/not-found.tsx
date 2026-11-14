@@ -16,7 +16,6 @@ export default function NotFound() {
     <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
       <Navbar />
 
-      {/* Subtle radial glow — matches BlackHole purple */}
       <div
         aria-hidden="true"
         style={{
@@ -48,7 +47,6 @@ export default function NotFound() {
           zIndex: 1,
         }}
       >
-        {/* 404 — bright, proud, not ghosted */}
         <motion.div
           variants={{
             hidden:  { opacity: 0, y: 40, scale: 0.92 },
@@ -93,7 +91,6 @@ export default function NotFound() {
           </span>
         </motion.div>
 
-        {/* Line — draws from center, same as WelcomeScreen */}
         <motion.div
           variants={{
             hidden:  { scaleX: 0, opacity: 0 },
@@ -131,7 +128,6 @@ export default function NotFound() {
           </span>
         </motion.div>
 
-        {/* Headline */}
         <motion.h1
           variants={{
             hidden:  { opacity: 0, y: 20 },
@@ -151,7 +147,6 @@ export default function NotFound() {
           You wandered off the map.
         </motion.h1>
 
-        {/* Body */}
         <motion.p
           variants={{
             hidden:  { opacity: 0, y: 16 },
@@ -168,11 +163,10 @@ export default function NotFound() {
             letterSpacing: '0.01em',
           }}
         >
-          This page was moved, removed, or never existed.
+          This page was moved, removed or never existed.
           Head back to find what you need.
         </motion.p>
 
-        {/* Button */}
         <motion.div
           variants={{
             hidden:  { opacity: 0, y: 12 },
@@ -202,7 +196,7 @@ export default function NotFound() {
                 letterSpacing: '0.02em',
               }}
             >
-              ← Go home
+              Go home
             </Link>
           </motion.div>
         </motion.div>
