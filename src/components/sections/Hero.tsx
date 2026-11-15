@@ -191,7 +191,7 @@ export default function Hero({ showApp }: HeroProps) {
               textWrap: "pretty",
             }}
           >
-            I build responsive web interfaces with a focus on clean design and smooth user experience. Still in high school but treating every project like it's real work.
+            I build responsive websites with an eye for clean design and a smooth user experience. I'm still a student but I take every project seriously and always aim to make something I'm proud of.
           </p>
         </motion.div>
 
