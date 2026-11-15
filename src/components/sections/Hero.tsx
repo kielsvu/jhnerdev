@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -5,7 +6,7 @@ import { motion } from "framer-motion";
 import TextType from "@/components/band/TextType";
 import App from "@/components/band/App";
 
-const skills = ["TypeScript", "PL/SQL", "Tailwind"]
+const skills = ["TypeScript", "PL/SQL", "Tailwind"];
 const typingTexts = ["Junior Developer", "UI/UX Developer", "Database Developer"];
 
 type HeroProps = {
@@ -264,57 +265,10 @@ export default function Hero({ showApp }: HeroProps) {
               color: "var(--text-muted)",
             }}
           >
-            ↗ open to full-time & freelance opportunities
+            ↗ Available for freelance work and new projects.
           </span>
         </motion.div>
       </div>
-
-
-      <motion.div
-        initial={false}
-        animate={startAnim ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-        transition={{
-          duration: 0.9,
-          delay: 1.2,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none flex justify-center"
-      >
-        <motion.div
-          animate={{
-            y: [0, 6, 0],
-            opacity: [1, 0.65, 1],
-          }}
-          transition={{
-            duration: 1.4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="flex items-center justify-center gap-2"
-        >
-          <span
-            style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: 11,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "var(--text-muted)",
-            }}
-          >
-            Scroll
-          </span>
-
-          <span
-            style={{
-              fontSize: 16,
-              color: "var(--text-secondary)",
-              lineHeight: 1,
-            }}
-          >
-            ↓
-          </span>
-        </motion.div>
-      </motion.div>
     </section>
   );
 }
