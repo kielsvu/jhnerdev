@@ -174,7 +174,7 @@ export default function About() {
                 maxWidth: isMobile ? "100%" : "490px",
               }}
             >
-              I’m a senior high school student who picked up programming out of pure curiosity and never really stopped. I’ve been building websites for a couple of years now and I genuinely enjoy the process of turning an idea into something that actually works and looks good doing it.
+              I got into programming through Roblox scripting. What started as experimenting with Lua and figuring out how exploits worked eventually turned into a genuine interest in software development. Since then I've moved into web development and started building projects of my own. I enjoy learning how things work and turning ideas into something real.
             </motion.p>
 
             <motion.div
@@ -201,7 +201,7 @@ export default function About() {
                 width: "fit-content",
               }}
             >
-              “Still learning but building things that matter.”
+              “Driven by curiosity. Built through experience.”
             </motion.div>
 
             <motion.div
