@@ -4,36 +4,20 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Navbar from '@/components/ui/Navbar'
 
-const sp = (delay = 0) => ({
-  type: 'spring' as const,
-  bounce: 0,
-  duration: 0.65,
-  delay,
-})
+const springUI    = { type: 'spring' as const, bounce: 0, duration: 0.45 }
+const springPress = { type: 'spring' as const, bounce: 0, duration: 0.1  }
 
 export default function NotFound() {
   return (
     <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
       <Navbar />
 
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'fixed',
-          inset: 0,
-          background:
-            'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(178,132,255,0.07) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-
       <motion.section
         initial="hidden"
         animate="visible"
         variants={{
           hidden:   {},
-          visible:  { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
+          visible:  { transition: { staggerChildren: 0.07, delayChildren: 0.08 } },
         }}
         style={{
           minHeight: '100vh',
@@ -43,139 +27,84 @@ export default function NotFound() {
           justifyContent: 'center',
           padding: '0 24px',
           textAlign: 'center',
-          position: 'relative',
-          zIndex: 1,
         }}
       >
         <motion.div
-          variants={{
-            hidden:  { opacity: 0, y: 40, scale: 0.92 },
-            visible: { opacity: 1, y: 0,  scale: 1    },
-          }}
-          transition={sp(0)}
-          style={{ lineHeight: 1, marginBottom: 10, userSelect: 'none' }}
+          variants={{ hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0 } }}
+          transition={springUI}
+          style={{ marginBottom: 20 }}
         >
           <span
             style={{
-              fontFamily: "'Syne', sans-serif",
-              fontSize: 'clamp(88px, 18vw, 160px)',
-              fontWeight: 800,
-              letterSpacing: '-0.05em',
-              color: 'var(--text-primary)',
-            }}
-          >
-            4
-          </span>
-          {/* Centre digit in purple — matches site accent */}
-          <span
-            style={{
-              fontFamily: "'Syne', sans-serif",
-              fontSize: 'clamp(88px, 18vw, 160px)',
-              fontWeight: 800,
-              letterSpacing: '-0.05em',
-              color: 'rgba(178,132,255,0.8)',
-            }}
-          >
-            0
-          </span>
-          <span
-            style={{
-              fontFamily: "'Syne', sans-serif",
-              fontSize: 'clamp(88px, 18vw, 160px)',
-              fontWeight: 800,
-              letterSpacing: '-0.05em',
-              color: 'var(--text-primary)',
-            }}
-          >
-            4
-          </span>
-        </motion.div>
-
-        <motion.div
-          variants={{
-            hidden:  { scaleX: 0, opacity: 0 },
-            visible: { scaleX: 1, opacity: 1  },
-          }}
-          transition={sp(0.05)}
-          style={{
-            width: 100,
-            height: 1,
-            background: 'rgba(255,255,255,0.1)',
-            transformOrigin: 'center',
-            marginBottom: 28,
-          }}
-        />
-
-        {/* Badge */}
-        <motion.div
-          variants={{
-            hidden:  { opacity: 0, y: 12 },
-            visible: { opacity: 1, y: 0  },
-          }}
-          transition={sp(0.1)}
-          style={{ marginBottom: 16 }}
-        >
-          <span
-            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 7,
               fontFamily: "'DM Mono', monospace",
               fontSize: 11,
+              fontWeight: 500,
               color: 'var(--text-muted)',
-              letterSpacing: '0.22em',
+              letterSpacing: '0.18em',
               textTransform: 'uppercase',
             }}
           >
-            Page not found
+            <span
+              style={{
+                width: 5,
+                height: 5,
+                borderRadius: '50%',
+                background: 'rgba(178,132,255,0.6)',
+                display: 'inline-block',
+                flexShrink: 0,
+              }}
+            />
+            Error 404
           </span>
         </motion.div>
 
         <motion.h1
-          variants={{
-            hidden:  { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0  },
-          }}
-          transition={sp(0.14)}
+          variants={{ hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0 } }}
+          transition={springUI}
           style={{
             fontFamily: "'Syne', sans-serif",
-            fontSize: 'clamp(24px, 4vw, 40px)',
+            fontSize: 'clamp(32px, 6vw, 52px)',
             fontWeight: 800,
-            lineHeight: 1.1,
+            lineHeight: 1.05,
             letterSpacing: '-0.03em',
             color: 'var(--text-primary)',
-            marginBottom: 14,
+            marginBottom: 16,
+            maxWidth: 480,
+            fontOpticalSizing: 'auto',
           }}
         >
-          You wandered off the map.
+          This page doesn't exist.
         </motion.h1>
 
         <motion.p
-          variants={{
-            hidden:  { opacity: 0, y: 16 },
-            visible: { opacity: 1, y: 0  },
-          }}
-          transition={sp(0.18)}
+          variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
+          transition={springUI}
           style={{
             fontFamily: "'DM Mono', monospace",
             fontSize: 13,
             color: 'var(--text-secondary)',
-            lineHeight: 1.8,
-            maxWidth: 340,
-            marginBottom: 36,
+            lineHeight: 1.9,
+            maxWidth: 320,
+            marginBottom: 40,
             letterSpacing: '0.01em',
           }}
         >
-          This page was moved, removed or never existed.
-          Head back to find what you need.
+          The page you're looking for was moved,<br />
+          removed, or never existed.
         </motion.p>
 
         <motion.div
-          variants={{
-            hidden:  { opacity: 0, y: 12 },
-            visible: { opacity: 1, y: 0  },
-          }}
-          transition={sp(0.22)}
+          variants={{ hidden: { opacity: 0, y: 12, scale: 0.96 }, visible: { opacity: 1, y: 0, scale: 1 } }}
+          transition={springUI}
+          style={{ marginBottom: 16 }}
         >
           <motion.div
-            whileTap={{ scale: 0.96, transition: { type: 'spring', bounce: 0, duration: 0.14 } }}
+            whileTap={{ scale: 0.97 }}
+            transition={springPress}
+            style={{ display: 'inline-block' }}
           >
             <Link
               href="/"
@@ -183,22 +112,48 @@ export default function NotFound() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
-                fontFamily: "'DM Mono', monospace",
-                fontSize: 13,
-                fontWeight: 500,
-                color: 'var(--text-primary)',
-                border: '1px solid var(--border)',
+                fontFamily: "'Syne', sans-serif",
+                fontSize: 14,
+                fontWeight: 700,
+                letterSpacing: '-0.01em',
+                color: 'var(--bg-primary)',
+                background: 'var(--text-primary)',
                 borderRadius: 999,
-                padding: '11px 24px',
-                backgroundColor: 'var(--bg-card)',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
+                padding: '12px 28px',
                 textDecoration: 'none',
-                letterSpacing: '0.02em',
+                transition: 'opacity 0.1s ease',
               }}
             >
-              Go home
+              Return to jhner.dev
             </Link>
           </motion.div>
+        </motion.div>
+
+        <motion.div
+          variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+          transition={{ ...springUI, delay: 0.08 }}
+        >
+          <motion.button
+            onClick={() => window.history.back()}
+            whileTap={{ scale: 0.97 }}
+            transition={springPress}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontFamily: "'DM Mono', monospace",
+              fontSize: 13,
+              color: 'var(--text-muted)',
+              letterSpacing: '0.02em',
+              padding: '8px 16px',
+              borderRadius: 8,
+              transition: 'color 0.15s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}
+          >
+            Go back
+          </motion.button>
         </motion.div>
       </motion.section>
     </main>
