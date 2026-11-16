@@ -45,6 +45,13 @@ export const projects: LocalProject[] = [
     technologies: 'Lua, Luau',
     image_url: '/projects/NexoraHub.jpg',
   },
+  {
+    id: 'Database',
+    title: 'Portfolio Database',
+    description: 'A Supabase PostgreSQL database using PL/pgSQL to manage contact submissions, admin sessions, trusted devices, and security logs, with automated cleanup and Row Level Security.',
+    technologies: 'PostgreSQL, PL/pgSQL, Supabase',
+    image_url: '/projects/database.jpg',
+  },
 ]
 
 export const techStacks: LocalTechStack[] = [
