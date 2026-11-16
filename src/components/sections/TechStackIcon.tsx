@@ -162,8 +162,8 @@ function RustIcon(p: SVGProps<SVGSVGElement>) {
         fontSize="15.5"
         fontWeight="900"
         fontFamily="Arial,sans-serif"
-        fill="var(--tech-icon-bg,#080808)"
-      >
+        fill="#FFFFFF"
+        >
         R
       </text>
 
