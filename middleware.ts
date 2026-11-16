@@ -21,13 +21,59 @@ const allowedBots = [
 ]
 
 const honeypotPaths = [
-  '/admin', '/wp-admin', '/wp-login.php', '/.env', '/.env.local',
-  '/config', '/config.php', '/phpmyadmin', '/.git', '/xmlrpc.php',
-  '/api/debug', '/server-status', '/actuator',
-  '/console', '/shell', '/backup', '/dump',
+  '/admin', '/administrator', '/admin.php', '/admin/login',
+  '/login', '/login.php', '/signin', '/sign-in',
+  '/dashboard', '/controlpanel', '/cpanel',
+  '/user/login', '/users/login', '/auth',
+  '/wp-admin', '/wp-login.php', '/wp-content',
+  '/wp-includes', '/wp-json', '/wp-config.php',
+  '/xmlrpc.php', '/wordpress', '/wp',
+  '/drupal', '/joomla', '/magento',
+  '/administrator/index.php', '/user/register',
+  '/api/swagger', '/swagger', '/swagger-ui',
+  '/graphql', '/graphiql', '/api/graphql',
+  '/.env', '/.env.local', '/.env.production',
+  '/.env.development', '/.env.backup',
+  '/.git', '/.svn', '/.hg',
+  '/config', '/config.php', '/configuration.php',
+  '/settings.py', '/web.config', '/application.yml',
+  '/application.properties', '/database.yml',
+  '/.htaccess', '/.htpasswd',
+  '/phpmyadmin', '/pma', '/adminer',
+  '/adminer.php', '/mysql', '/mysqladmin',
+  '/phpPgAdmin', '/pgadmin', '/mongo-express',
+  '/redis', '/elasticsearch',
+  '/debug', '/debug/default/view',
+  '/api/debug', '/_debug', '/__debug__',
+  '/trace', '/actuator', '/actuator/env',
+  '/actuator/health', '/actuator/configprops',
+  '/server-status', '/server-info',
+  '/status', '/metrics', '/health',
+  '/api-docs', '/api/docs', '/swagger.json',
+  '/openapi.json', '/redoc',
+  '/api/test', '/api/internal',
+  '/api/private', '/api/v1/debug',
+  '/backup', '/backups', '/dump',
+  '/database.sql', '/db.sql',
+  '/backup.sql', '/dump.sql',
+  '/backup.zip', '/backup.tar',
+  '/archive.zip', '/old',
+  '/.DS_Store', '/Thumbs.db',
+  '/console', '/shell', '/terminal',
+  '/cgi-bin', '/cgi-bin/test-cgi',
+  '/.well-known/security.txt',
+  '/jenkins', '/hudson',
+  '/.docker', '/docker-compose.yml',
+  '/kubernetes', '/.kube',
+  '/terraform.tfstate',
+  '/info.php', '/phpinfo.php',
+  '/test.php', '/install.php',
+  '/setup.php', '/server.php',
+  '/error_log', '/access.log',
+  '/debug.log', '/logs',
 ]
 
-function getIP(req: NextRequest) {
+function getIp(req: NextRequest) {
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
 }
 
@@ -50,24 +96,25 @@ function isRateLimited(ip: string) {
   return entry.count > 60
 }
 
-function isBadBot(ua: string) {
-  if (!ua || ua.length < 10) return true
-  const lower = ua.toLowerCase()
+function isBadBot(userAgent: string) {
+  if (!userAgent || userAgent.length < 10) return true
+  const lower = userAgent.toLowerCase()
   if (allowedBots.some(b => lower.includes(b))) return false
   return blockedAgents.some(b => lower.includes(b))
 }
 
 function isHoneypot(path: string) {
-  return honeypotPaths.some(p => path === p || path.startsWith(p + '/'))
+  const normalized = path.toLowerCase().replace(/\/+$/, '') || '/'
+  return honeypotPaths.some(p => normalized === p || normalized.startsWith(p + '/'))
 }
 
 export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
-  const ua = req.headers.get('user-agent') ?? ''
-  const ip = getIP(req)
+  const userAgent = req.headers.get('user-agent') ?? ''
+  const ip = getIp(req)
 
   if (isHoneypot(path)) return new NextResponse(null, { status: 403 })
-  if (isBadBot(ua)) return new NextResponse(null, { status: 403 })
+  if (isBadBot(userAgent)) return new NextResponse(null, { status: 429 })
   if (isRateLimited(ip)) return new NextResponse(null, { status: 429 })
 
   return NextResponse.next()
