@@ -21,7 +21,7 @@ const allowedBots = [
 ]
 
 const honeypotPaths = [
-  '/admin', '/administrator', '/admin.php', '/admin/login',
+  '/admin', "/admin/api", '/administrator', '/admin.php', '/admin/login',
   '/login', '/login.php', '/signin', '/sign-in',
   '/dashboard', '/controlpanel', '/cpanel',
   '/user/login', '/users/login', '/auth',
