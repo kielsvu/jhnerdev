@@ -142,10 +142,10 @@ function KotlinIcon(p: SVGProps<SVGSVGElement>) {
 function AssemblyIcon(p: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...p}>
-      <path d="M7 4.5h10M5.5 7v10M18.5 7v10M7 19.5h10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-      <path d="M7 7h10v10H7z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-      <path d="M9 10h6M9 12h6M9 14h4.2" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
-      <path d="M4 8v2M4 14v2M20 8v2M20 14v2M8 4v-1M12 4v-1M16 4v-1M8 20v1M12 20v1M16 20v1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M8 2.5v3M12 2.5v3M16 2.5v3M8 18.5v3M12 18.5v3M16 18.5v3M2.5 8h3M2.5 12h3M2.5 16h3M18.5 8h3M18.5 12h3M18.5 16h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <rect x="5.5" y="5.5" width="13" height="13" rx="2" fill="currentColor"/>
+      <rect x="8" y="8" width="8" height="8" rx="1" fill="var(--tech-icon-bg,#080808)"/>
+      <text x="12" y="13.55" textAnchor="middle" fontSize="4.2" fontWeight="900" fontFamily="Arial,sans-serif" letterSpacing="-0.35" fill="currentColor">ASM</text>
     </svg>
   )
 }
@@ -154,19 +154,9 @@ function RustIcon(p: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd" {...p}>
       <path d="M22.91 10.57L22.91 13.44L20.43 13.11A8.5 8.5 0 0 1 19.47 16.06L21.67 17.25L19.98 19.57L18.17 17.85A8.5 8.5 0 0 1 15.65 19.68L16.72 21.94L14.02 22.81L13.56 20.35A8.5 8.5 0 0 1 10.44 20.35L9.98 22.81L7.28 21.94L8.35 19.68A8.5 8.5 0 0 1 5.83 17.85L4.02 19.57L2.33 17.25L4.53 16.06A8.5 8.5 0 0 1 3.57 13.11L1.09 13.44L1.09 10.57L3.57 10.89A8.5 8.5 0 0 1 4.53 7.94L2.33 6.75L4.02 4.43L5.83 6.15A8.5 8.5 0 0 1 8.35 4.32L7.28 2.06L9.98 1.19L10.44 3.65A8.5 8.5 0 0 1 13.56 3.65L14.02 1.19L16.72 2.06L15.65 4.32A8.5 8.5 0 0 1 18.17 6.15L19.98 4.43L21.67 6.75L19.47 7.94A8.5 8.5 0 0 1 20.43 10.89ZM18.8 12A6.8 6.8 0 0 1 5.2 12A6.8 6.8 0 0 1 18.8 12Z" />
-
-      <text
-        x="12"
-        y="17"
-        textAnchor="middle"
-        fontSize="15.5"
-        fontWeight="900"
-        fontFamily="Arial,sans-serif"
-        fill="#FFFFFF"
-        >
+      <text x="12" y="17" textAnchor="middle" fontSize="15.5" fontWeight="900" fontFamily="Arial,sans-serif" fill="#FFFFFF">
         R
       </text>
-
       <g fill="var(--tech-icon-bg,#080808)">
         <circle cx="12" cy="4.3" r="0.65" />
         <circle cx="4.5" cy="9.6" r="0.65" />
