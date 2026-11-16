@@ -30,10 +30,37 @@ function NextIcon(p: SVGProps<SVGSVGElement>) {
   )
 }
 
-function TypeScriptIcon(p: SVGProps<SVGSVGElement>) { return <LetterIcon letter="TS" {...p}/> }
-function JavaScriptIcon(p: SVGProps<SVGSVGElement>) { return <LetterIcon letter="JS" {...p}/> }
-function HtmlIcon(p: SVGProps<SVGSVGElement>) { return <LetterIcon letter="HTML" {...p}/> }
-function CssIcon(p: SVGProps<SVGSVGElement>) { return <LetterIcon letter="CSS" {...p}/> }
+function TypeScriptIcon(p: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+      <path d="M3 3h18v18H3V3zm10.8 14.1c.4.7 1.1 1.1 2.1 1.1 1.1 0 1.9-.6 1.9-1.6 0-.9-.5-1.3-1.6-1.8l-.4-.2c-.6-.3-.8-.5-.8-.8 0-.3.2-.5.6-.5s.6.2.8.5l1.2-.8c-.4-.8-1.1-1.1-2-1.1-1.2 0-2 .7-2 1.7 0 .9.5 1.4 1.5 1.8l.4.2c.6.3.9.5.9.9 0 .3-.3.6-.7.6-.5 0-.9-.3-1.1-.8l-1.3.8zm-5.3-3.8h1.6v4.8h1.5v-4.8h1.6V12H8.5v1.3z"/>
+    </svg>
+  )
+}
+
+function JavaScriptIcon(p: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+      <path d="M3 3h18v18H3V3zm13.3 14.2c.3.5.6.8 1.2.8.5 0 .8-.2.8-.6 0-.4-.3-.6-.9-.9l-.3-.1c-1-.4-1.7-1-1.7-2.1 0-1 .8-1.8 2-1.8.9 0 1.6.3 2 1.1l-1.1.7c-.2-.4-.5-.6-.9-.6-.3 0-.6.2-.6.5s.2.5.7.7l.3.1c1.2.5 1.9 1.1 1.9 2.2 0 1.2-.9 1.9-2.2 1.9-1.2 0-2-.6-2.4-1.4l1.2-.5zm-5.1.1c.2.4.5.7 1 .7.5 0 .8-.2.8-1v-4.4h1.5V17c0 1.7-1 2.4-2.3 2.4-1.2 0-1.9-.6-2.3-1.4l1.3-.7z"/>
+    </svg>
+  )
+}
+
+function HtmlIcon(p: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+      <path d="M3 2h18l-1.6 18L12 22l-7.4-2L3 2zm14.7 4H6.3l.2 2h9l-.3 3H8.2l.2 2h6.6l-.4 4-2.6.7-2.6-.7-.2-2H7.1l.4 3.5 4.5 1.2 4.5-1.2.7-8H8.2l-.2-2h9.5l.2-2z"/>
+    </svg>
+  )
+}
+
+function CssIcon(p: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+      <path d="M3 2h18l-1.6 18L12 22l-7.4-2L3 2zm14.7 4H6.3l.2 2h9l-.3 3H8.2l.2 2h6.6l-.4 4-2.6.7-2.6-.7-.2-2H7.1l.4 3.5 4.5 1.2 4.5-1.2.7-8H8.2l-.2-2h9.5l.2-2z"/>
+    </svg>
+  )
+}
 
 function TailwindIcon(p: SVGProps<SVGSVGElement>) {
   return (
