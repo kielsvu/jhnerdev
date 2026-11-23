@@ -84,7 +84,7 @@ export default function ContactForm() {
           <AnimatePresence>
             {sent && (
               <motion.p key="sent" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ type: 'spring', bounce: 0, duration: 0.3 }} className="flex items-center gap-2 text-sm text-green-400/90 px-1">
-                <CheckCircle size={15} /> Email client opened — send from there.
+                <CheckCircle size={15} /> Email client opened send it from there.
               </motion.p>
             )}
           </AnimatePresence>
