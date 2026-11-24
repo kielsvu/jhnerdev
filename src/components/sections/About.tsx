@@ -150,7 +150,8 @@ export default function About() {
                   color: "var(--text-primary)",
                 }}
               >
-                <div>Jhner Torres</div>
+                <div>Jhner 
+                          Torres</div>
               </div>
             </motion.div>
 
